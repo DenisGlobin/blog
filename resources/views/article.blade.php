@@ -1,35 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Articles</div>
+    <div class="col-md-8 blog-main">
+        <h3 class="pb-3 mb-4 font-italic border-bottom">Article</h3>
 
-                    <div class="card-body">
+        <div class="card flex-md-row mb-4 box-shadow">
+            <div class="card-body d-flex flex-column align-items-start">
+                <h2 class="blog-post-title">{{ $article->title }}</h2>
+                <p class="blog-post-meta">
+                    {!! $article->created_at !!} by
+                    <a href="#">{{ $article->user->name }}</a>
+                </p>
 
-                        <div class="messages">
-
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        <span>
-                                            <a href="#">{{ $article->title }}</a>
-                                        </span>
-                                        <span class="pull-right label label-info">{!! $article->created_at !!}</span>
-                                    </h3>
-                                </div>
-
-                                <div class="panel-body">
-                                    {!! $article->full_text !!}
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
+                <p class="card-text mb-auto">{!! $article->full_text !!}</p>
+                <hr/>
             </div>
         </div>
     </div>

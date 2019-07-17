@@ -39,7 +39,7 @@ class ArticleController extends Controller
     public function showArticle(int $arcticleID)
     {
         $data = [
-            'artcile' => Article::findOrFail($arcticleID),
+            'article' => Article::findOrFail($arcticleID),
         ];
         return view('article', $data);
     }
