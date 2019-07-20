@@ -32,10 +32,19 @@
         </h5>
         <nav class="my-2 my-md-0 mr-md-3">
             @auth
-                <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                <a class="p-2 text-dark" href="{{ route('profile') }}">Profile</a>
-                <a class="p-2 text-dark" href="#">Add new article</a>
-                <a class="p-2 text-dark" href="#">Search</a>
+                @if (Auth::user()->is_admin)
+                    <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
+                    <a class="p-2 text-dark" href="{{ route('profile') }}">My profile</a>
+                    <a class="p-2 text-dark" href="{{ route('admin.profiles') }}">Users profiles</a>
+                    <a class="p-2 text-dark" href="#">Add new article</a>
+                    <a class="p-2 text-dark" href="#">Statistic</a>
+                    <a class="p-2 text-dark" href="#">Search</a>
+                @else
+                    <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
+                    <a class="p-2 text-dark" href="{{ route('profile') }}">My profile</a>
+                    <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
+                    <a class="p-2 text-dark" href="#">Search</a>
+                @endif
             @endauth
             @guest
                 <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
