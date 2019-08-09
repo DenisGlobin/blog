@@ -27,7 +27,7 @@ class ArticleController extends Controller
     public function index()
     {
         $data = [
-            'articles' => Article::latest()->paginate(5),
+            'articles' => Article::latest()->where('is_active', true)->paginate(5),
         ];
         return view('index', $data);
     }
@@ -52,28 +52,28 @@ class ArticleController extends Controller
         return view('user.add_article');
     }
 
-    public function addNewArticle(Request $request)
+    public function addNewArticle(ArticleRequest $request)
     {
         $this->middleware(['auth', 'verified']);
-        $validated = $request->validated();
         $article = new Article();
         $article->title = $request->input('title');
         $article->full_text = $request->input('fullText');
         $article->short_text = substr($request->input('fullText'), 1,100);
         $article->is_active = $request->input('isActive');
-//        if ($request->input('isActive') == 'on') {
-//            $article->is_active = true;
-//        }
-//        else {
-//            $article->is_active = false;
-//        }
+        if ($request->has('isActive')) {
+            $article->is_active = true;
+        }
+        else {
+            $article->is_active = false;
+        }
         $article->user_id = Auth::id();
         try {
             $article->save();
         }
         catch (\Exception $ex) {
-            $request->session()->flash('error', $ex->getMessage());
-            return view('index', ['articles' => Article::latest()->paginate(5)]);
+//            $request->session()->flash('error', $ex->getMessage());
+//            return back();
+            return view('user.add_article')->with('error', $ex->getMessage());
         }
         $data = [
             'articles' => Article::latest()->paginate(5),

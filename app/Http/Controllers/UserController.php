@@ -28,4 +28,13 @@ class UserController extends Controller
     {
         return view('user.profile', ['user' => Auth::user()]);
     }
+
+    public function getMyArticles()
+    {
+        $data = [
+            'articles' => Article::latest()->where('user_id', Auth::id())->paginate(5),
+            'user' => Auth::user(),
+        ];
+        return view('user.articles', $data);
+    }
 }

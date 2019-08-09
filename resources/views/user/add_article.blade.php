@@ -10,11 +10,17 @@
                     @csrf
                     <div class="form-group">
                         <label for="inputAddress2">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="Type title of the article">
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title" placeholder="Type title of the article">
+                        @error('title')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <label for="exampleFormControlTextarea1">Type text of the Article</label>
-                        <textarea class="form-control" id="fullText" name="fullText" rows="5"></textarea>
+                        <textarea class="form-control @error('fullText') is-invalid @enderror" id="fullText" name="fullText" rows="5"></textarea>
+                        @error('fullText')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="form-group">
                         <div class="form-check">

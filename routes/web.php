@@ -19,6 +19,7 @@ Route::get('/{id}', 'ArticleController@showArticle')->name('article')->where(['i
 
 // User routes
 Route::get('/profile', 'UserController@index')->name('profile')->middleware('auth','verified');
+Route::get('/my/articles', 'UserController@getMyArticles')->name('my.articles')->middleware('auth','verified');
 Route::get('/article/add', 'ArticleController@showAddArticleForm')->name('show.addarticle.form')->middleware('auth','verified');
 Route::post('/article/add', 'ArticleController@addNewArticle')->name('add.article')->middleware('auth','verified');
 // Admin routes

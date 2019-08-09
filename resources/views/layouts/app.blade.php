@@ -34,14 +34,14 @@
             @auth
                 @if (Auth::user()->is_admin)
                     <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('profile') }}">My profile</a>
+                    <a class="p-2 text-dark" href="{{ route('my.articles') }}">My articles</a>
                     <a class="p-2 text-dark" href="{{ route('admin.profiles') }}">Users profiles</a>
                     <a class="p-2 text-dark" href="#">Add new article</a>
                     <a class="p-2 text-dark" href="#">Statistic</a>
                     <a class="p-2 text-dark" href="#">Search</a>
                 @else
                     <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('profile') }}">My profile</a>
+                    <a class="p-2 text-dark" href="{{ route('my.articles') }}">My articles</a>
                     <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
                     <a class="p-2 text-dark" href="#">Search</a>
                 @endif
@@ -62,6 +62,7 @@
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="btn btn-outline-primary dropdown-item" href="{{ route('profile') }}">My profile</a>
                 <a class="btn btn-outline-primary dropdown-item" href="{{ route('logout') }}"
                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
