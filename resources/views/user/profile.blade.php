@@ -13,9 +13,9 @@
                     </div>
                 @endif
 
-                    <form method="POST" action="{{ route('profile') }}">
+                    <form method="POST" action="{{ route('edit.profile') }}">
                         @csrf
-
+                        <input id="id" name="id" type="hidden" value="{{ isset($user->id) ? $user->id : null }}">
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
@@ -43,15 +43,10 @@
                                 @enderror
                             </div>
                         </div>
-                        <fieldset disabled>
-                            <div class="form-group row">
-                                <label for="registred-at" class="col-md-4 col-form-label text-md-right">Registered at</label>
 
-                                <div class="col-md-6">
-                                    <input id="registred-at" type="text" class="form-control" name="registred_at" value="{{ $user->email_verified_at }}">
-                                </div>
-                            </div>
-                        </fieldset>
+                        <div class="form-group row justify-content-center">
+                            <p class="blog-post-meta">Registered at: {!! $user->email_verified_at !!}</p>
+                        </div>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

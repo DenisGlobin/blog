@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Article;
+use App\Comment;
+use App\Http\Requests\CommentRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +44,8 @@ class ArticleController extends Controller
     {
         $data = [
             'article' => Article::findOrFail($arcticleID),
+            'comments' => Comment::where('article_id', $arcticleID)
+                        ->orderBy('created_at', 'desc')->get(),
         ];
         return view('article', $data);
     }
@@ -78,6 +82,22 @@ class ArticleController extends Controller
         $data = [
             'articles' => Article::latest()->paginate(5),
         ];
-        return view('index', $data);
+        return view('index', $data)->with('success', 'The new article was added');
+    }
+
+    public function addComment(CommentRequest $request)
+    {
+        $this->middleware(['auth', 'verified']);
+        $comment = new Comment();
+        $comment->message = $request->input('message');
+        $comment->user_id = $request->input('userID');
+        $comment->article_id = $request->input('articleID');
+        try {
+            $comment->save();
+        }
+        catch (\Exception $ex) {
+            return $this->showArticle($request->input('articleID'))->with('error', $ex->getMessage());
+        }
+        return $this->showArticle($request->input('articleID'))->with('success', 'The new comment was added');
     }
 }

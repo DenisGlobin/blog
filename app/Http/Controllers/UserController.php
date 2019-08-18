@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the user profile.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
@@ -36,5 +36,24 @@ class UserController extends Controller
             'user' => Auth::user(),
         ];
         return view('user.articles', $data);
+    }
+
+    public function getUserInfo(int $id)
+    {
+        return view('profile', ['user' => User::findOrFail($id)]);
+    }
+
+    public function saveUserInfo(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        try {
+            $user->save();
+        }
+        catch (\Exception $ex) {
+            return view('user.profile', ['user' => $user])->with('error', $ex->getMessage());
+        }
+        return view('user.profile', ['user' => $user])->with('success', 'Changes saved');
     }
 }

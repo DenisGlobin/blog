@@ -19,8 +19,11 @@ Route::get('/{id}', 'ArticleController@showArticle')->name('article')->where(['i
 
 // User routes
 Route::get('/profile', 'UserController@index')->name('profile')->middleware('auth','verified');
+Route::post('/profile', 'UserController@saveUserInfo')->name('edit.profile')->middleware('auth','verified');
+Route::get('/user/{id}', 'UserController@getUserInfo')->name('user.info')->where(['id' => '[0-9]+'])->middleware('auth','verified');
 Route::get('/my/articles', 'UserController@getMyArticles')->name('my.articles')->middleware('auth','verified');
 Route::get('/article/add', 'ArticleController@showAddArticleForm')->name('show.addarticle.form')->middleware('auth','verified');
 Route::post('/article/add', 'ArticleController@addNewArticle')->name('add.article')->middleware('auth','verified');
+Route::post('/comment', 'ArticleController@addComment')->name('add.comment')->middleware('auth','verified');
 // Admin routes
 Route::get('/profiles', 'AdminController@index')->name('admin.profiles')->middleware('auth', 'admin');

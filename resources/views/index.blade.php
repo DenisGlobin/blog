@@ -11,7 +11,7 @@
                             <h2 class="blog-post-title">{{ $article->title }}</h2>
                             <p class="blog-post-meta">
                                 {!! $article->created_at !!} by
-                                <a href="#">{{ $article->user->name }}</a>
+                                <a href="{{ route('user.info', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
                             </p>
 
                             <p>{!! $article->short_text !!}</p>
