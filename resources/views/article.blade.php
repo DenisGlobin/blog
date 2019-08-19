@@ -14,6 +14,9 @@
 
                 <p class="card-text mb-auto">{!! $article->full_text !!}</p>
                 <hr/>
+                <p class="blog-post-meta">
+                    <a href="{{ url()->previous() }}">Back to main page</a>
+                </p>
             </div>
         </div>
         <div class="card flex-md-row mb-4 box-shadow">
