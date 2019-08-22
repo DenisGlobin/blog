@@ -37,7 +37,7 @@
                         {!! $articles->render() !!}
                     </div>
                 @else
-                    <span>You have not added any articles yet.</span>
+                    <span>{{ __('article.no_usr_articles') }}</span>
                 @endif
 
             </div>

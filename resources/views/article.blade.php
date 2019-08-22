@@ -15,7 +15,7 @@
                 <p class="card-text mb-auto">{!! $article->full_text !!}</p>
                 <hr/>
                 <p class="blog-post-meta">
-                    <a href="{{ url()->previous() }}">Back to main page</a>
+                    <a href="{{ route('articles') }}">{{ __('article.main_page') }}</a>
                 </p>
             </div>
         </div>

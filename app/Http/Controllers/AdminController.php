@@ -18,7 +18,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Get the admin home page
+     * Show all users.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

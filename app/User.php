@@ -38,16 +38,31 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin' => 'boolean',
     ];
 
+    /**
+     * Check has the user is admin.
+     *
+     * @return mixed
+     */
     public function isAdmin()
     {
         return $this->is_admin;
     }
 
+    /**
+     * Retrive articles related with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function article()
     {
         return $this->hasMany(Article::class);
     }
 
+    /**
+     * Retrive comments related with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comment()
     {
         return $this->hasMany(Comment::class);

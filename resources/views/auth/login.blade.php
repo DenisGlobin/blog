@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">{{ __('Login') }}</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">{{ __('authforms.login') }}</h3>
 
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column ">
@@ -11,7 +11,7 @@
                     @csrf
 
                     <div class="form-group row">
-                        <label for="Login" class="col-md-4 col-form-label text-md-right">{{ __('Login') }}</label>
+                        <label for="Login" class="col-md-4 col-form-label text-md-right">{{ __('authforms.login') }}</label>
 
                         <div class="col-md-6">
                             <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
@@ -25,7 +25,7 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                        <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('authforms.password') }}</label>
 
                         <div class="col-md-6">
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -44,7 +44,7 @@
                                 <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                 <label class="form-check-label" for="remember">
-                                    {{ __('Remember Me') }}
+                                    {{ __('authforms.remember') }}
                                 </label>
                             </div>
                         </div>
@@ -53,12 +53,12 @@
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('Login') }}
+                                {{ __('authforms.login') }}
                             </button>
 
                             @if (Route::has('password.request'))
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
+                                    {{ __('authforms.forgot_pwd') }}
                                 </a>
                             @endif
                         </div>

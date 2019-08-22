@@ -18,7 +18,7 @@ class ArticleController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware(['auth', 'verified']);
+        //
     }
 
     /**
@@ -50,12 +50,23 @@ class ArticleController extends Controller
         return view('article', $data);
     }
 
+    /**
+     * Show form for adding new article.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showAddArticleForm()
     {
         $this->middleware(['auth', 'verified']);
         return view('user.add_article');
     }
 
+    /**
+     * Save new article to Database.
+     *
+     * @param ArticleRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function addNewArticle(ArticleRequest $request)
     {
         $this->middleware(['auth', 'verified']);
@@ -75,29 +86,36 @@ class ArticleController extends Controller
             $article->save();
         }
         catch (\Exception $ex) {
-//            $request->session()->flash('error', $ex->getMessage());
-//            return back();
-            return view('user.add_article')->with('error', $ex->getMessage());
+            $request->session()->flash('error', __('article.save_err') . $ex->getMessage());
+            return view('user.add_article');
         }
         $data = [
             'articles' => Article::latest()->paginate(5),
         ];
-        return view('index', $data)->with('success', 'The new article was added');
+        return view('index', $data)->with('success', __('article.save_ok'));
     }
 
+    /**
+     * Save new comment to Database.
+     *
+     * @param CommentRequest $request
+     * @return \Illuminate\View\View
+     */
     public function addComment(CommentRequest $request)
     {
         $this->middleware(['auth', 'verified']);
         $comment = new Comment();
         $comment->message = $request->input('message');
-        $comment->user_id = $request->input('userID');
+        $comment->user_id = Auth::id();
         $comment->article_id = $request->input('articleID');
         try {
             $comment->save();
         }
         catch (\Exception $ex) {
-            return $this->showArticle($request->input('articleID'))->with('error', $ex->getMessage());
+            $request->session()->flash('error', __('article.comment_err') . $ex->getMessage());
+            return redirect()->route('article', ['id' => $request->input('articleID')]);
         }
-        return $this->showArticle($request->input('articleID'))->with('success', 'The new comment was added');
+        $request->session()->flash('success', __('article.comment_ok'));
+        return redirect()->route('article', ['id' => $request->input('articleID')]);
     }
 }

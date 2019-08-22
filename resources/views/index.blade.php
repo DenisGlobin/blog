@@ -29,7 +29,7 @@
                         {!! $articles->render() !!}
                     </div>
                 @else
-                    <span>There are no articles yet.</span>
+                    <span>{{ __('article.no_articles') }}</span>
                 @endif
         </div>
 

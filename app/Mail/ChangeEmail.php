@@ -14,6 +14,7 @@ class ChangeEmail extends Mailable
 
     protected $user;
     protected $token;
+
     /**
      * Create a new message instance.
      *

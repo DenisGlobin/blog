@@ -6,22 +6,46 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    protected $primaryKey = 'id';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'title', 'message', 'user_id',
     ];
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = [
         'created_at', 'updated_at',
     ];
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'is_active' => 'boolean',
     ];
 
+    /**
+     * Retrive user related with the article.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Retrive comments related with the comment.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comment()
     {
         return $this->hasMany(Comment::class);

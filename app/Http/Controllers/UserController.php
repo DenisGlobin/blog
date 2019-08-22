@@ -31,6 +31,11 @@ class UserController extends Controller
         return view('user.profile', ['user' => Auth::user()]);
     }
 
+    /**
+     * Show articles written by the user
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getMyArticles()
     {
         $data = [
@@ -40,21 +45,38 @@ class UserController extends Controller
         return view('user.articles', $data);
     }
 
+    /**
+     * Show user's info.
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getUserInfo(int $id)
     {
         return view('profile', ['user' => User::findOrFail($id)]);
     }
 
+    /**
+     * Edit user's profile info.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editUserInfo(Request $request)
     {
         $user = User::find($request->id);
+        //Check if this login is unique
+        if (User::where('name', $request->name)->get()) {
+            $request->session()->flash('error', __('profile.login_exst'));
+            return view('user.profile', ['user' => $user]);
+        }
         $user->name = $request->name;
         //Save new name
         try {
             $user->save();
         }
         catch (\Exception $ex) {
-            return view('user.profile', ['user' => $user])->with('error', $ex->getMessage());
+            return view('user.profile', ['user' => $user])->with('error', __('profile.save_err') . $ex->getMessage());
         }
         //If user try to change his email
         if ($user->email != $request->email) {
@@ -66,29 +88,37 @@ class UserController extends Controller
                 $request->session()->put('email', $request->email);
                 Mail::to($user)->queue(new ChangeEmail($user, $token));
             } catch (\Exception $ex) {
-                $request->session()->flash('error', 'There was an error sending the email. ' . $ex->getMessage());
+                $request->session()->flash('error', __('profile.email_err') . $ex->getMessage());
                 return view('user.profile', ['user' => $user]);
             }
             return view('user.verify_change_email');
         }
-        $request->session()->flash('success', 'Changes saved');
+        $request->session()->flash('success', __('profile.save_ok'));
         return view('user.profile', ['user' => $user]);
     }
 
+    /**
+     * Confirming to change user's email adress.
+     *
+     * @param string $token
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function confirmedEmailChange(string $token)
     {
         //Verify token
         if (session()->has('token') && session('token') == $token) {
+            //Save changes.
             $user = User::find(session('id'));
             $user->email = session('email');
             try {
                 $user->save();
             }
             catch (\Exception $ex) {
-                return view('user.profile', ['user' => $user])->with('error', $ex->getMessage());
+                session()->flash('error', __('profile.save_err') . $ex->getMessage());
+                return view('user.profile', ['user' => $user]);
             }
         }
-        session()->flash('success', 'Email changed');
+        session()->flash('success', __('profile.save_ok'));
         return view('user.profile', ['user' => $user]);
     }
 }
