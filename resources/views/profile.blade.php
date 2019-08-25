@@ -19,6 +19,10 @@
                         <td>{{ $user->email }}</td>
                     </tr>
                     <tr>
+                        <th scope="row">User's article</th>
+                        <td><a href="{{ route('user.article', ['id' => $user->id]) }}">Link</a> </td>
+                    </tr>
+                    <tr>
                         <th scope="row">Registered at</th>
                         <td>{{ $user->email_verified_at }}</td>
                     </tr>

@@ -32,20 +32,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show articles written by the user
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function getMyArticles()
-    {
-        $data = [
-            'articles' => Article::latest()->where('user_id', Auth::id())->paginate(5),
-            'user' => Auth::user(),
-        ];
-        return view('user.articles', $data);
-    }
-
-    /**
      * Show user's info.
      *
      * @param int $id

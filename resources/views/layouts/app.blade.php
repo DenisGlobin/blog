@@ -34,14 +34,14 @@
             @auth
                 @if (Auth::user()->is_admin)
                     <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('my.articles') }}">My articles</a>
+                    <a class="p-2 text-dark" href="{{ route('user.article', ['id' => Auth::id()]) }}">My articles</a>
                     <a class="p-2 text-dark" href="{{ route('admin.profiles') }}">Users profiles</a>
                     <a class="p-2 text-dark" href="#">Add new article</a>
                     <a class="p-2 text-dark" href="#">Statistic</a>
                     <a class="p-2 text-dark" href="#">Search</a>
                 @else
                     <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('my.articles') }}">My articles</a>
+                    <a class="p-2 text-dark" href="{{ route('user.article', ['id' => Auth::id()]) }}">My articles</a>
                     <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
                     <a class="p-2 text-dark" href="#">Search</a>
                 @endif
@@ -53,17 +53,17 @@
         </nav>
 
         @guest
-            <a class="btn btn-outline-primary" href="{{ route('login') }}">{{ __('Login') }}</a>
+            <a class="btn btn-light" href="{{ route('login') }}">{{ __('Login') }}</a>
             @if (Route::has('register'))
-                <a class="btn btn-outline-primary" href="{{ route('register') }}">{{ __('Register') }}</a>
+                <a class="btn btn-light" href="{{ route('register') }}">{{ __('Register') }}</a>
             @endif
         @else
-            <a id="navbarDropdown" class="btn btn-outline-primary dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+            <a id="navbarDropdown" class="btn btn-light dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="btn btn-outline-primary dropdown-item" href="{{ route('profile') }}">My profile</a>
-                <a class="btn btn-outline-primary dropdown-item" href="{{ route('logout') }}"
+                <a class="btn btn-light dropdown-item" href="{{ route('profile') }}">My profile</a>
+                <a class="btn btn-light dropdown-item" href="{{ route('logout') }}"
                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
@@ -132,5 +132,6 @@
     <script src="{{ asset('js/alertify.js') }}"></script>
     <!-- Alerts notification -->
     @include('inc.alerts')
+    @yield('js_notify')
 </body>
 </html>
