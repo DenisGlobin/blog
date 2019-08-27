@@ -35,19 +35,15 @@
                             @endif
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add article</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </form>
+                <br>
+                <a href="{{ route('article', ["id" => $article->id]) }}">Return back</a>
                 @if (session('error'))
                     <div class="alert alert-danger" role="alert">
                         {{ session('error') }}
                     </div>
                 @endif
-            </div>
-        </div>
-        <div class="card flex-md-row mb-4 box-shadow">
-            <div class="card-body d-flex flex-column">
-                <h2 class="blog-post-title">Comments</h2>
-                @include('inc.comments.comments')
             </div>
         </div>
     </div>

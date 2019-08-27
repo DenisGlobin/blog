@@ -22,8 +22,8 @@
                         </div>
                         @if($article->user->id == Auth::id())
                             <div class="col-3">
-                                <a class="btn btn-outline-primary btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
-                                <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
+                                <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del" id="articleDel">Delete</button>
                             </div>
                         @endif
                     </div>
@@ -46,43 +46,76 @@
 
 @section('js_notify')
     <script>
-        // For article
-        $(function(){
-            $(".btn-outline-danger").on('click', function () {
+        // Delete article
+        $(function () {
+            $("button[id^='articleDel']").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("Вы действительно хотите удалить эту статью?", function () {
+                alertify.confirm("{{ __('article.delete') }}", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('del.article') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("Статья удалена!");
+                            alertify.success("{{ __('article.delete_ok') }}");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("Действие отменено");
+                    alertify.error("{{ __('article.cancel') }}");
                 });
             })
         });
-        // For comment
-        $(function(){
-            $(".btn-danger").on('click', function () {
+        // Delete comment
+        $(function () {
+            $("button[id^='commentDel']").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("Вы действительно хотите удалить этот коментарий?", function () {
+                alertify.confirm("{{ __('comment.delete') }}", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('del.comment') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("Коментарий удалён!");
+                            alertify.success("{{ __('comment.delete_ok') }}");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("Действие отменено");
+                    alertify.error("{{ __('article.cancel') }}");
                 });
             })
         });
+        // Edit comment
+        $(function () {
+            $("button[id^='commentEdt']").on('click', function () {
+                let id = $(this).attr("value");
+                let msgElem = $("#commentNum"+id);
+                // fill textarea with this comment
+                $("textarea#message").val(msgElem.text());
+                // Change action url
+                $("#commentForm").attr("action", "{{ route('edit.comment') }}");
+                // Set comment ID value
+                $("input#commentID").val(id);
+                // Show button for cancel edition
+                $("textarea#message").before("" +
+                    "<div class='alert alert-warning alert-dismissible fade show' role='alert' id='cancelEdt'>\n" +
+                    "        <strong>Editing comment.</strong>\n" +
+                    "        <button type='button' class='close' data-dismiss='alert' aria-label='Close' onclick='editCancel()'>\n" +
+                    "            <span aria-hidden='true'>&times;</span>\n" +
+                    "        </button>\n" +
+                    "</div>");
+                // Scrolling page to comment's textarea
+                var dn = $("div#cancelEdt").offset().top;
+                $('html, body').animate({scrollTop: dn}, 1000);
+                alertify.success("Comment editing");
+            })
+        });
+        // Cancel editing comment
+        function editCancel () {
+            // clear textarea
+            $("textarea#message").val('');
+            // Change action url
+            $("#commentForm").attr("action", "{{ route('add.comment') }}");
+            alertify.error("Comment editing has been canceled");
+        }
     </script>
 @endsection

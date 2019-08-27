@@ -170,7 +170,7 @@ class ArticleController extends Controller
             $request->session()->flash('success', __('article.update_ok'));
             return redirect()->route('article', $data);
         } else {
-            $request->session()->flash('error', 'You have not permission for editing this article.');
+            $request->session()->flash('error', __('article.delete_perm_err'));
             return redirect()->back();
         }
     }
@@ -190,7 +190,7 @@ class ArticleController extends Controller
             if ($article->user->id == Auth::id()) {
                 $article->delete();
             } else {
-                $request->session()->flash('error', 'You have not permission for deleting this article.');
+                $request->session()->flash('error', __('article.delete_perm_err'));
                 return redirect()->back();
             }
         }

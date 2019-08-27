@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Comments
     Route::post('/comment', 'CommentController@addComment')->name('add.comment');
     Route::delete('/comment/delete', 'CommentController@deleteComment')->name('del.comment');
+    Route::post('/comment/edit', 'CommentController@updateComment')->name('edit.comment');
 });
 // Admin routes
 Route::get('/profiles', 'AdminController@index')->name('admin.profiles')->middleware('auth', 'admin');

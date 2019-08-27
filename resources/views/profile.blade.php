@@ -19,7 +19,7 @@
                         <td>{{ $user->email }}</td>
                     </tr>
                     <tr>
-                        <th scope="row">User's article</th>
+                        <th scope="row">User's articles</th>
                         <td><a href="{{ route('user.article', ['id' => $user->id]) }}">Link</a> </td>
                     </tr>
                     <tr>

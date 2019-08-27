@@ -27,7 +27,7 @@
                                 </div>
                                 @if($article->user->id == Auth::id())
                                     <div class="col-3">
-                                        <a class="btn btn-outline-primary btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                        <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
                                 @endif
@@ -56,18 +56,18 @@
         $(function(){
             $(".btn-outline-danger").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("Вы действительно хотите удалить эту статью?", function () {
+                alertify.confirm("{{ __('article.delete') }}", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('del.article') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("Статья удалена!");
+                            alertify.success("{{ __('article.delete_ok') }}");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("Действие отменено");
+                    alertify.error("{{ __('article.cancel') }}");
                 });
             })
         });
