@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Library\Date\BlogDateFormat;
 
 class Article extends Model
 {
+    use BlogDateFormat;
     /**
      * The attributes that are mass assignable.
      *

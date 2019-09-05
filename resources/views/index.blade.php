@@ -73,3 +73,17 @@
         });
     </script>
 @endsection
+
+@section('archive')
+    <div class="p-3">
+        <h4 class="font-italic">Archives</h4>
+        <ol class="list-unstyled mb-0">
+            @foreach($dates as $date)
+                <li class="blog-post-meta">
+                    <a href="{{ route('articles.from', ['month' => $date['month'], 'year' => $date['year']]) }}">{!! $date['date'] !!}</a>
+                    {!! ' [' . $date['count'] . ']' !!}
+                </li>
+            @endforeach
+        </ol>
+    </div>
+@endsection

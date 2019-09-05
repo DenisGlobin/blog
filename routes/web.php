@@ -17,6 +17,7 @@ Auth::routes(['verify' => true]);
 Route::get('/', 'ArticleController@index')->name('articles');
 Route::get('/{id}', 'ArticleController@showArticle')->name('article')->where(['id' => '[0-9]+']);
 Route::get('/user/{id}/article', 'ArticleController@getUserArticles')->name('user.article')->where(['id' => '[0-9]+']);
+Route::get('/articles/from/{month}/{year}', 'ArticleController@getArticlesFromMonth')->name('articles.from')->where(['month' => '[0-9]+' , 'year' => '[0-9]+']);
 
 // User routes
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -5,12 +5,61 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Comment;
 use App\Http\Requests\CommentRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
+    /**
+     * Get articles from months sorted by date
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getArticlesFromMonths()
+    {
+//        return DB::select("select date_part('month', created_at) as month,
+//                                  date_part('year', created_at) as year, count(*) from articles
+//                                  where is_active='true' and created_at > :lastYear
+//                                  group by year, month order by year, month", ['lastYear' => Carbon::now()->subYear()]);
+
+        return DB::table('articles')
+            ->select(DB::raw("date_part('month', created_at) as month,
+                                  date_part('year', created_at) as year, count(*)"))
+            ->where('is_active', 'true')
+            ->where('created_at', '>', Carbon::now()->subYear())
+            ->groupBy('year', 'month')
+            ->orderByRaw('year, month DESC')
+            ->get();
+
+//        return Article::latest()->where('is_active', 'true')->where('created_at', '>', Carbon::now()->subYear())
+//            ->get()->groupBy(function($val) {
+//                return Carbon::parse($val->created_at)->isoFormat('MMMM  YYYY');
+//            });
+    }
+
+    /**
+     * Get array of archive sorted by date
+     *
+     * @return array
+     */
+    protected function getArchives()
+    {
+        $archives = array();
+        $months = $this->getArticlesFromMonths();
+        $index = 0;
+        foreach ($months as $month) {
+            $date = Carbon::createFromIsoFormat('!YYYY-M', $month->year . '-' . $month->month, 'UTC');
+            $archives[$index]['date'] = $date->isoFormat('MMMM YYYY');
+            $archives[$index]['month'] = $month->month;
+            $archives[$index]['year'] = $month->year;
+            $archives[$index]['count'] = $month->count;
+            $index++;
+        }
+        return $archives;
+    }
     /**
      * Create a new controller instance.
      *
@@ -29,8 +78,12 @@ class ArticleController extends Controller
     public function index()
     {
         $data = [
-            'articles' => Article::latest()->where('is_active', true)->paginate(5),
+            'articles' => Article::latest()
+                        ->where('is_active', true)
+                        ->paginate(5),
+            'dates' => $this->getArchives(),
         ];
+        //dd($data);
         return view('index', $data);
     }
 
@@ -45,7 +98,8 @@ class ArticleController extends Controller
         $data = [
             'article' => Article::findOrFail($articleID),
             'comments' => Comment::where('article_id', $articleID)
-                        ->orderBy('created_at', 'desc')->get(),
+                        ->orderBy('created_at', 'desc')
+                        ->get(),
         ];
         return view('article', $data);
     }
@@ -60,14 +114,38 @@ class ArticleController extends Controller
     {
         if (Auth::check() && Auth::id() == $userID) {
         $data = [
-            'articles' => Article::latest()->where('user_id', $userID)->paginate(5),
+            'articles' => Article::latest()
+                        ->where('user_id', $userID)
+                        ->paginate(5),
         ];
         } else {
             $data = [
-                'articles' => Article::latest()->where('user_id', $userID)
-                    ->where('is_active', true)->paginate(5),
+                'articles' => Article::latest()
+                        ->where('user_id', $userID)
+                        ->where('is_active', true)
+                        ->paginate(5),
             ];
         }
+        return view('index', $data);
+    }
+
+    /**
+     * Show articles from the month.
+     *
+     * @param int $month
+     * @param int $year
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getArticlesFromMonth(int $month, int $year)
+    {
+        $data = [
+            'articles' => Article::latest()
+                        ->where('is_active', true)
+                        ->whereMonth('created_at', $month)
+                        ->whereYear('created_at', $year)
+                        ->paginate(5),
+            'dates' => $this->getArchives(),
+        ];
         return view('index', $data);
     }
 
