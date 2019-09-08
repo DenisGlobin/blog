@@ -34,14 +34,14 @@ trait BlogDateFormat
         return Carbon::createFromFormat('Y-m-d H:i:s', $date)->calendar();
     }
 
-    /**
-     * Change email_verified_at date format.
-     *
-     * @param $date
-     * @return string
-     */
-    public function getEmailVerifiedAtAttribute($date)
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->isoFormat('lll');
-    }
+//    /**
+//     * Change email_verified_at date format.
+//     *
+//     * @param $date
+//     * @return string
+//     */
+//    public function getEmailVerifiedAtAttribute($date)
+//    {
+//        return Carbon::createFromFormat('Y-m-d H:i:s', $date)->isoFormat('lll');
+//    }
 }

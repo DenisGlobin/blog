@@ -24,7 +24,7 @@
 <body>
 
     <!-- Top navigation panel -->
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow" id="top">
         <h5 class="my-0 mr-md-auto font-weight-normal">
         <a class="blog-header-logo text-dark" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
@@ -109,7 +109,7 @@
     <footer class="blog-footer">
         <p>Blog created by <a href="https://github.com/DenisGlobin?tab=repositories">Denis Globin</a>.</p>
         <p>
-            <a href="#">Back to top</a>
+            <a href="#" onclick="scrollingPageToTop()">Back to top</a>
         </p>
     </footer>
 
@@ -119,6 +119,7 @@
     <script src="{{ asset('js/alertify.js') }}"></script>
     <!-- Alerts notification -->
     @include('inc.alerts')
-    @yield('js_notify')
+    @include('inc.scroll_to_top')
+    @yield('js')
 </body>
 </html>

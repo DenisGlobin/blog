@@ -51,7 +51,7 @@
     </div>
 @endsection
 
-@section('js_notify')
+@section('js')
     <script>
         $(function(){
             $(".btn-outline-danger").on('click', function () {

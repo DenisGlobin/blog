@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Date\BlogDateFormat;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
     use BlogDateFormat;
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -22,7 +24,7 @@ class Article extends Model
      * @var array
      */
     protected $dates = [
-        'created_at', 'updated_at',
+        'created_at', 'updated_at', 'deleted_at',
     ];
     /**
      * The attributes that should be cast to native types.
@@ -51,5 +53,10 @@ class Article extends Model
     public function comment()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function tag()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 }

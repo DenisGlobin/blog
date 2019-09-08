@@ -15,6 +15,14 @@
                         <td>{{ $user->name }}</td>
                     </tr>
                     <tr>
+                        <th scope="row">First name</th>
+                        <td>{{ $user->first_name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Last name</th>
+                        <td>{{ $user->last_name }}</td>
+                    </tr>
+                    <tr>
                         <th scope="row">Email</th>
                         <td>{{ $user->email }}</td>
                     </tr>

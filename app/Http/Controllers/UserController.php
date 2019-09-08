@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Mail\ChangeEmail;
 use App\User;
 use App\Article;
@@ -45,27 +46,19 @@ class UserController extends Controller
     /**
      * Edit user's profile info.
      *
-     * @param Request $request
+     * @param UserRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function editUserInfo(Request $request)
+    public function editUserInfo(UserRequest $request)
     {
-        $user = User::find($request->id);
-        //Check if this login is unique
-        if (User::where('name', $request->name)->get()) {
-            $request->session()->flash('error', __('profile.login_exst'));
-            return view('user.profile', ['user' => $user]);
-        }
-        $user->name = $request->name;
-        //Save new name
-        try {
-            $user->save();
-        }
-        catch (\Exception $ex) {
-            return view('user.profile', ['user' => $user])->with('error', __('profile.save_err') . $ex->getMessage());
+        //Find user
+        $user = User::findOrFail($request->id);
+        //If user try to change his login
+        if ($user->name != $request->name && isset($request->name)) {
+            $user->name = $request->name;
         }
         //If user try to change his email
-        if ($user->email != $request->email) {
+        if ($user->email != $request->email && isset($request->email)) {
             //Notify user about change email
             try {
                 $token = hash('md5', $user->name);
@@ -78,6 +71,20 @@ class UserController extends Controller
                 return view('user.profile', ['user' => $user]);
             }
             return view('user.verify_change_email');
+        }
+        //If user try to change his First name
+        if (isset($request->firstName)) {
+            $user->first_name = $request->firstName;
+        }
+        //If user try to change his Last name
+        if (isset($request->lastName)) {
+            $user->last_name = $request->lastName;
+        }
+        //Save changes
+        try {
+            $user->save();
+        } catch (\Exception $ex) {
+            return view('user.profile', ['user' => $user])->with('error', __('profile.save_err') . $ex->getMessage());
         }
         $request->session()->flash('success', __('profile.save_ok'));
         return view('user.profile', ['user' => $user]);

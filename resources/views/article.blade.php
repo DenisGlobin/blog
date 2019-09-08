@@ -44,7 +44,7 @@
     </div>
 @endsection
 
-@section('js_notify')
+@section('js')
     <script>
         // Delete article
         $(function () {

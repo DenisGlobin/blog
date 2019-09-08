@@ -117,6 +117,7 @@ class ArticleController extends Controller
             'articles' => Article::latest()
                         ->where('user_id', $userID)
                         ->paginate(5),
+            'dates' => $this->getArchives(),
         ];
         } else {
             $data = [
@@ -124,6 +125,7 @@ class ArticleController extends Controller
                         ->where('user_id', $userID)
                         ->where('is_active', true)
                         ->paginate(5),
+                'dates' => $this->getArchives(),
             ];
         }
         return view('index', $data);

@@ -4,10 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Library\Date\BlogDateFormat;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
     use BlogDateFormat;
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
@@ -16,7 +18,14 @@ class Comment extends Model
     protected $fillable = [
         'message', 'user_id', 'comment_id',
     ];
-
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at', 'updated_at', 'deleted_at',
+    ];
     /**
      * Retrive user related with the comment.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
