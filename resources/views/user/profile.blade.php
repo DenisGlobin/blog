@@ -8,7 +8,7 @@
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
 
-                    <form method="POST" action="{{ route('edit.profile') }}">
+                    <form method="POST" action="{{ route('profile.edit') }}">
                         @csrf
                         {{-- User's ID --}}
                         <input id="id" name="id" type="hidden" value="{{ isset($user->id) ? $user->id : null }}">

@@ -16,6 +16,13 @@
                 <hr/>
 
                 <div class="container">
+                    <p class="blog-post-meta">Tags:
+                        @foreach($article->tags as $tag)
+                            <a class="text-dark" href="#">[{{ $tag->name }}], </a>
+                        @endforeach
+                    </p>
+                </div>
+                <div class="container">
                     <div class="row justify-content-between">
                         <div class="col-5">
                             <a href="{{ route('articles') }}">{{ __('article.main_page') }}</a>
@@ -53,7 +60,7 @@
                 alertify.confirm("{{ __('article.delete') }}", function () {
                     $.ajax({
                         type: "delete",
-                        url: "{{ route('del.article') }}",
+                        url: "{{ route('article.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
                             alertify.success("{{ __('article.delete_ok') }}");
@@ -72,7 +79,7 @@
                 alertify.confirm("{{ __('comment.delete') }}", function () {
                     $.ajax({
                         type: "delete",
-                        url: "{{ route('del.comment') }}",
+                        url: "{{ route('comment.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
                             alertify.success("{{ __('comment.delete_ok') }}");
@@ -92,7 +99,7 @@
                 // fill textarea with this comment
                 $("textarea#message").val(msgElem.text());
                 // Change action url
-                $("#commentForm").attr("action", "{{ route('edit.comment') }}");
+                $("#commentForm").attr("action", "{{ route('comment.edit') }}");
                 // Set comment ID value
                 $("input#commentID").val(id);
                 // Show button for cancel edition
@@ -114,7 +121,7 @@
             // clear textarea
             $("textarea#message").val('');
             // Change action url
-            $("#commentForm").attr("action", "{{ route('add.comment') }}");
+            $("#commentForm").attr("action", "{{ route('comment.add') }}");
             alertify.error("Comment editing has been canceled");
         }
     </script>

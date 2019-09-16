@@ -21,6 +21,13 @@
 
                         <p>{!! $article->short_text !!}</p>
                         <div class="container">
+                            <p class="blog-post-meta">Tags:
+                            @foreach($article->tags as $tag)
+                                <a class="text-secondary" href="#">[{{ $tag->name }}]   </a>
+                            @endforeach
+                            </p>
+                        </div>
+                        <div class="container">
                             <div class="row justify-content-between">
                                 <div class="col-5">
                                     <a href="{{ route('article', ['id' => $article->id]) }}">Read more</a>
@@ -59,7 +66,7 @@
                 alertify.confirm("{{ __('article.delete') }}", function () {
                     $.ajax({
                         type: "delete",
-                        url: "{{ route('del.article') }}",
+                        url: "{{ route('article.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
                             alertify.success("{{ __('article.delete_ok') }}");
@@ -85,5 +92,16 @@
                 </li>
             @endforeach
         </ol>
+    </div>
+@endsection
+
+@section('tags')
+    <div class="p-3 mb-3 bg-light rounded">
+        <h4 class="font-italic">Tags</h4>
+        <p class="mb-0">
+            @foreach($tags as $tag)
+            <a class="text-dark" href="#">{{ $tag->name }}</a>,
+            @endforeach
+        </p>
     </div>
 @endsection

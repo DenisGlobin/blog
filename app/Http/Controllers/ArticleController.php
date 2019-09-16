@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Comment;
 use App\Http\Requests\CommentRequest;
+use App\Tag;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
@@ -60,6 +61,25 @@ class ArticleController extends Controller
         }
         return $archives;
     }
+
+    protected function saveTags(Article $article, array $tags)
+    {
+        // Delete duplicates
+        $tags = array_unique($tags);
+        foreach ($tags as $tag) {
+            // If the tag exists in the DB
+            $exsistTag = Tag::where('name', $tag)->first();
+            if ($exsistTag != null) {
+                $article->tags()->attach($exsistTag->id);
+            } else {
+                // Add the tag to DB
+                $newTag = new Tag();
+                $newTag->name = (string) $tag;
+                $newTag->save();
+                $article->tags()->attach($newTag->id);
+            }
+        }
+    }
     /**
      * Create a new controller instance.
      *
@@ -82,8 +102,8 @@ class ArticleController extends Controller
                         ->where('is_active', true)
                         ->paginate(5),
             'dates' => $this->getArchives(),
+            'tags' => Tag::get(),
         ];
-        //dd($data);
         return view('index', $data);
     }
 
@@ -159,7 +179,7 @@ class ArticleController extends Controller
     public function showAddArticleForm()
     {
         $this->middleware(['auth', 'verified']);
-        return view('user.add_article');
+        return view('user.add_article', ['tags' => Tag::get()]);
     }
 
     /**
@@ -183,6 +203,8 @@ class ArticleController extends Controller
             $article->is_active = false;
         }
         $article->user_id = Auth::id();
+
+        // Save article
         try {
             $article->save();
         }
@@ -190,8 +212,13 @@ class ArticleController extends Controller
             $request->session()->flash('error', __('article.save_err') . $ex->getMessage());
             return view('user.add_article');
         }
+        // Add tags
+        $this->saveTags($article, $request->tags);
+        // Get articles
         $data = [
             'articles' => Article::latest()->paginate(5),
+            'dates' => $this->getArchives(),
+            'tags' => Tag::get(),
         ];
         $request->session()->flash('success', __('article.save_ok'));
         return view('index', $data);
@@ -210,6 +237,7 @@ class ArticleController extends Controller
             'article' => Article::findOrFail($articleID),
             'comments' => Comment::where('article_id', $articleID)
                 ->orderBy('created_at', 'desc')->get(),
+            'tags' => Tag::get(),
         ];
         return view('user.edit_article', $data);
     }
@@ -240,6 +268,11 @@ class ArticleController extends Controller
                 'comments' => Comment::where('article_id', $id)
                     ->orderBy('created_at', 'desc')->get(),
             ];
+            // Delete old tags
+            $article->tags()->detach();
+            // Add tags
+            $this->saveTags($article, $request->tags);
+            // Save changes
             try {
                 $article->save();
             }
@@ -247,6 +280,7 @@ class ArticleController extends Controller
                 $request->session()->flash('error', __('article.update_err') . $ex->getMessage());
                 return redirect()->route('article', $data);
             }
+            // Get articles
             $request->session()->flash('success', __('article.update_ok'));
             return redirect()->route('article', $data);
         } else {

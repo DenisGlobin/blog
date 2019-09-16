@@ -1,4 +1,4 @@
-<form action="{{ route('add.comment') }}" method="post" id="commentForm">
+<form action="{{ route('comment.add') }}" method="post" id="commentForm">
     @csrf
     <input id="articleID" name="articleID" type="hidden" value="{{ isset($article->id) ? $article->id : null }}">
     <input id="commentID" name="commentID" type="hidden" value="">

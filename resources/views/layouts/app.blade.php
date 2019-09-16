@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script>  --}}
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -36,7 +36,7 @@
                     <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
                     <a class="p-2 text-dark" href="{{ route('user.article', ['id' => Auth::id()]) }}">My articles</a>
                     <a class="p-2 text-dark" href="{{ route('admin.profiles') }}">Users profiles</a>
-                    <a class="p-2 text-dark" href="#">Add new article</a>
+                    <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
                     <a class="p-2 text-dark" href="#">Statistic</a>
                     <a class="p-2 text-dark" href="#">Search</a>
                 @else
@@ -86,15 +86,9 @@
 
                 <!-- Right sidebar -->
                 <aside class="col-md-4 blog-sidebar">
-                    <div class="p-3 mb-3 bg-light rounded">
-                        <h4 class="font-italic">Tags</h4>
-                        <p class="mb-0">
-                            <a class="text-dark" href="#">Tag1</a>,
-                            <a class="text-dark" href="#">Tag2</a>,
-                            <a class="text-dark" href="#">Tag3</a>,
-                            <a class="text-dark" href="#">Tag4</a>,
-                        </p>
-                    </div>
+                    @hasSection('tags')
+                        @yield('tags')
+                    @endif
 
                     @hasSection('archive')
                         @yield('archive')
