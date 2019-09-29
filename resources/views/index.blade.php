@@ -32,9 +32,15 @@
                                 <div class="col-5">
                                     <a href="{{ route('article', ['id' => $article->id]) }}">Read more</a>
                                 </div>
+                                {{-- Show Delete and Edit buttons for the article's owner --}}
                                 @if($article->user->id == Auth::id())
                                     <div class="col-3">
                                         <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
+                                    </div>
+                                {{-- Show Delete button for Admin --}}
+                                @elseif(Auth::check() && Auth::user()->is_admin)
+                                    <div class="col-3">
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
                                 @endif
@@ -100,7 +106,7 @@
         <h4 class="font-italic">Tags</h4>
         <p class="mb-0">
             @foreach($tags as $tag)
-            <a class="text-dark" href="#">{{ $tag->name }}</a>,
+                <a class="text-dark" href="#">{{ $tag->name }}</a>,
             @endforeach
         </p>
     </div>

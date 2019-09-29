@@ -13,13 +13,16 @@
                     </div>
                 @endif
 
-                <table class="table table-hover">
+                <form>
+                    @csrf
+                    <table class="table table-hover">
                     <thead>
                     <tr>
                         <th scope="col"></th>
                         <th scope="col">User ID</th>
-                        <th scope="col">User name</th>
-                        <th scope="col">Registred at</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">User email</th>
+                        <th scope="col">User statistic</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,13 +34,29 @@
                                     <input type="checkbox" name="chkbox[]" value="{!! $user->id !!}">
                                 </th>
                                 <td>{{ $user->id }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->created_at }}</td>
+                                <td><a href="{{ route('user.info', ['id' => $user->id]) }}">{{ $user->name }}</a></td>
+                                <td>{{ $user->email }}</td>
+                                <td><a href="{{ route('statistic.user', ['id' => $user->id]) }}">Link</a></td>
                             </tr>
                         @endif
                     @endforeach
                     </tbody>
-                </table>
+                    </table>
+
+                    <div class="input-group">
+                        <select class="custom-select" id="banSelector">
+                            <option selected>Choose...</option>
+                            <option value="1">Remove the ban</option>
+                            <option value="1">One day</option>
+                            <option value="2">One week</option>
+                            <option value="3">One month</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                        </div>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>

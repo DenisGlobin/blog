@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    {{-- <script src="{{ asset('js/app.js') }}" defer></script>  --}}
+     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -33,22 +33,13 @@
         <nav class="my-2 my-md-0 mr-md-3">
             @auth
                 @if (Auth::user()->is_admin)
-                    <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('user.article', ['id' => Auth::id()]) }}">My articles</a>
-                    <a class="p-2 text-dark" href="{{ route('admin.profiles') }}">Users profiles</a>
-                    <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
-                    <a class="p-2 text-dark" href="#">Statistic</a>
-                    <a class="p-2 text-dark" href="#">Search</a>
+                    @include('inc.navbars.navbar_admin')
                 @else
-                    <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                    <a class="p-2 text-dark" href="{{ route('user.article', ['id' => Auth::id()]) }}">My articles</a>
-                    <a class="p-2 text-dark" href="{{ route('show.addarticle.form') }}">Add new article</a>
-                    <a class="p-2 text-dark" href="#">Search</a>
+                    @include('inc.navbars.navbar_user')
                 @endif
             @endauth
             @guest
-                <a class="p-2 text-dark" href="{{ route('articles') }}">Articles</a>
-                <a class="p-2 text-dark" href="#">Search</a>
+                @include('inc.navbars.navbar_guest')
             @endguest
         </nav>
 
@@ -64,8 +55,8 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <a class="btn btn-light dropdown-item" href="{{ route('profile') }}">My profile</a>
                 <a class="btn btn-light dropdown-item" href="{{ route('logout') }}"
-                   onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
                 </a>
 

@@ -27,9 +27,15 @@
                         <div class="col-5">
                             <a href="{{ route('articles') }}">{{ __('article.main_page') }}</a>
                         </div>
+                        {{-- Show Delete and Edit buttons for the article's owner --}}
                         @if($article->user->id == Auth::id())
                             <div class="col-3">
                                 <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del" id="articleDel">Delete</button>
+                            </div>
+                        {{-- Show Delete button for Admin --}}
+                        @elseif(Auth::check() && Auth::user()->is_admin)
+                            <div class="col-3">
                                 <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del" id="articleDel">Delete</button>
                             </div>
                         @endif

@@ -4,63 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Article;
 use App\Comment;
-use App\Http\Requests\CommentRequest;
 use App\Tag;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Library\Date\ArticlesArchive;
 
 class ArticleController extends Controller
 {
-    /**
-     * Get articles from months sorted by date
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    protected function getArticlesFromMonths()
-    {
-//        return DB::select("select date_part('month', created_at) as month,
-//                                  date_part('year', created_at) as year, count(*) from articles
-//                                  where is_active='true' and created_at > :lastYear
-//                                  group by year, month order by year, month", ['lastYear' => Carbon::now()->subYear()]);
-
-        return DB::table('articles')
-            ->select(DB::raw("date_part('month', created_at) as month,
-                                  date_part('year', created_at) as year, count(*)"))
-            ->where('is_active', 'true')
-            ->where('created_at', '>', Carbon::now()->subYear())
-            ->groupBy('year', 'month')
-            ->orderByRaw('year, month DESC')
-            ->get();
-
-//        return Article::latest()->where('is_active', 'true')->where('created_at', '>', Carbon::now()->subYear())
-//            ->get()->groupBy(function($val) {
-//                return Carbon::parse($val->created_at)->isoFormat('MMMM  YYYY');
-//            });
-    }
-
-    /**
-     * Get array of archive sorted by date
-     *
-     * @return array
-     */
-    protected function getArchives()
-    {
-        $archives = array();
-        $months = $this->getArticlesFromMonths();
-        $index = 0;
-        foreach ($months as $month) {
-            $date = Carbon::createFromIsoFormat('!YYYY-M', $month->year . '-' . $month->month, 'UTC');
-            $archives[$index]['date'] = $date->isoFormat('MMMM YYYY');
-            $archives[$index]['month'] = $month->month;
-            $archives[$index]['year'] = $month->year;
-            $archives[$index]['count'] = $month->count;
-            $index++;
-        }
-        return $archives;
-    }
+    use ArticlesArchive;
 
     protected function saveTags(Article $article, array $tags)
     {
@@ -101,7 +53,7 @@ class ArticleController extends Controller
             'articles' => Article::latest()
                         ->where('is_active', true)
                         ->paginate(5),
-            'dates' => $this->getArchives(),
+            'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
         ];
         return view('index', $data);
@@ -120,6 +72,7 @@ class ArticleController extends Controller
             'comments' => Comment::where('article_id', $articleID)
                         ->orderBy('created_at', 'desc')
                         ->get(),
+            'tags' => Tag::get(),
         ];
         return view('article', $data);
     }
@@ -137,7 +90,8 @@ class ArticleController extends Controller
             'articles' => Article::latest()
                         ->where('user_id', $userID)
                         ->paginate(5),
-            'dates' => $this->getArchives(),
+            'dates' => $this->getArticleArchive(),
+            'tags' => Tag::get(),
         ];
         } else {
             $data = [
@@ -145,7 +99,8 @@ class ArticleController extends Controller
                         ->where('user_id', $userID)
                         ->where('is_active', true)
                         ->paginate(5),
-                'dates' => $this->getArchives(),
+                'dates' => $this->getArticleArchive(),
+                'tags' => Tag::get(),
             ];
         }
         return view('index', $data);
@@ -166,7 +121,8 @@ class ArticleController extends Controller
                         ->whereMonth('created_at', $month)
                         ->whereYear('created_at', $year)
                         ->paginate(5),
-            'dates' => $this->getArchives(),
+            'dates' => $this->getArticleArchive(),
+            'tags' => Tag::get(),
         ];
         return view('index', $data);
     }
@@ -217,7 +173,7 @@ class ArticleController extends Controller
         // Get articles
         $data = [
             'articles' => Article::latest()->paginate(5),
-            'dates' => $this->getArchives(),
+            'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
         ];
         $request->session()->flash('success', __('article.save_ok'));
@@ -267,6 +223,7 @@ class ArticleController extends Controller
                 'article' => $article,
                 'comments' => Comment::where('article_id', $id)
                     ->orderBy('created_at', 'desc')->get(),
+                'tags' => Tag::get(),
             ];
             // Delete old tags
             $article->tags()->detach();
@@ -301,7 +258,7 @@ class ArticleController extends Controller
         if($request->ajax()) {
             $id = (int)$request->input('id');
             $article = Article::find($id);
-            if ($article->user->id == Auth::id()) {
+            if ($article->user->id == Auth::id() || Auth::user()->is_admin) {
                 $article->delete();
             } else {
                 $request->session()->flash('error', __('article.delete_perm_err'));

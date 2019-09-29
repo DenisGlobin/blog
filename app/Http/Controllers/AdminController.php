@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Library\Date\ArticlesArchive;
 
 class AdminController extends Controller
 {
+    use ArticlesArchive;
+
     /**
      * Create a new controller instance.
      *
@@ -28,5 +31,23 @@ class AdminController extends Controller
             'users' => User::get(),
         ];
         return view('admin.index', $data);
+    }
+
+    public function getStatistic()
+    {
+        $data = [
+            'dates' => $this->getArticleArchive("allArticles"),
+            'title' => 'Statistic for all articles'
+        ];
+        return view('admin.statistic', $data);
+    }
+
+    public function getUserStatistic(int $userID)
+    {
+        $data = [
+            'dates' => $this->getArticleArchive("userArticles", $userID),
+            'title' => "Statistic for user's articles"
+        ];
+        return view('admin.statistic', $data);
     }
 }

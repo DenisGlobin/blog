@@ -38,4 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/comment/edit', 'CommentController@updateComment')->name('comment.edit');
 });
 // Admin routes
-Route::get('/profiles', 'AdminController@index')->name('admin.profiles')->middleware('auth', 'admin');
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/profiles', 'AdminController@index')->name('admin.profiles');
+    Route::get('/statistic', 'AdminController@getStatistic')->name('statistic');
+    Route::get('/statistic/user/{id}', 'AdminController@getUserStatistic')->name('statistic.user')->where(['id' => '[0-9]+']);
+});
