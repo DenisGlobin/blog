@@ -33,7 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $dates = [
-        'created_at', 'updated_at', 'email_verified_at', 'deleted_at',
+        'created_at', 'updated_at', 'email_verified_at', 'deleted_at', 'banned_until',
     ];
 
     /**
@@ -53,6 +53,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin()
     {
         return $this->is_admin;
+    }
+
+    public function isBanned()
+    {
+        return is_null($this->banned_until) ? false : true;
     }
 
     /**

@@ -24,11 +24,6 @@
         </div>
     @endforeach
 
-    @if (session('error'))
-        <div class="alert alert-danger" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
 @else
     <span>{{ __('article.no_comments') }}</span>
 @endif

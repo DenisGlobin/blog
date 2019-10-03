@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->boolean('is_admin')->default(false);
+            $table->timestamp('banned_until')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

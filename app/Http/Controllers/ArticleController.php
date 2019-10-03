@@ -134,7 +134,7 @@ class ArticleController extends Controller
      */
     public function showAddArticleForm()
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified' , 'not.banned.user']);
         return view('user.add_article', ['tags' => Tag::get()]);
     }
 
@@ -146,7 +146,7 @@ class ArticleController extends Controller
      */
     public function addNewArticle(ArticleRequest $request)
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified', 'not.banned.user']);
         $article = new Article();
         $article->title = $request->input('title');
         $article->full_text = $request->input('fullText');
@@ -169,7 +169,10 @@ class ArticleController extends Controller
             return view('user.add_article');
         }
         // Add tags
-        $this->saveTags($article, $request->tags);
+        $tags = $request->tags;
+        if (!is_null($tags)) {
+            $this->saveTags($article, $request->tags);
+        }
         // Get articles
         $data = [
             'articles' => Article::latest()->paginate(5),
@@ -188,7 +191,7 @@ class ArticleController extends Controller
      */
     public function showEditArticleForm(int $articleID)
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified', 'not.banned.user']);
         $data = [
             'article' => Article::findOrFail($articleID),
             'comments' => Comment::where('article_id', $articleID)
@@ -206,7 +209,7 @@ class ArticleController extends Controller
      */
     public function updateArticle(ArticleRequest $request)
     {
-        $this->middleware(['auth', 'verified']);
+        $this->middleware(['auth', 'verified', 'not.banned.user']);
         $id = (int)$request->input('id');
         $article = Article::find($id);
         if ($article->user->id == Auth::id()) {

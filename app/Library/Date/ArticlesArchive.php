@@ -13,7 +13,7 @@ trait ArticlesArchive
     );
 
     /**
-     * Get articles from months sorted by date
+     * Get all articles from months sorted by date
      *
      * @return \Illuminate\Support\Collection
      */
@@ -29,6 +29,12 @@ trait ArticlesArchive
             ->get();
     }
 
+    /**
+     * Get user's articles from months sorted by date
+     *
+     * @param int $userID
+     * @return \Illuminate\Support\Collection
+     */
     protected function getUserArticleByMonth(int $userID)
     {
         return DB::table('articles')
@@ -43,14 +49,13 @@ trait ArticlesArchive
     /**
      * Get array of archive sorted by date
      *
-     * @return array
+     * @param string $handler
+     * @param null $userID
+     * @return array|void
      */
     protected function getArticleArchive($handler = "allArticles", $userID = null)
     {
         $archives = array();
-//        if ($handlers == 'allArticles') {
-//            $months = $this->getArticlesByMonths();
-//        }
         $months = array();
         switch ($handler){
             case "allArticles":

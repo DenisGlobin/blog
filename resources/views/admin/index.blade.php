@@ -13,7 +13,7 @@
                     </div>
                 @endif
 
-                <form>
+                <form method="post" action="{{ route('users.ban') }}">
                     @csrf
                     <table class="table table-hover">
                     <thead>
@@ -22,6 +22,7 @@
                         <th scope="col">User ID</th>
                         <th scope="col">Login</th>
                         <th scope="col">User email</th>
+                        <th scope="col">Banned until</th>
                         <th scope="col">User statistic</th>
                     </tr>
                     </thead>
@@ -31,28 +32,34 @@
                         @if ($user->is_admin == false)
                             <tr class="table-default">
                                 <th scope="row">
-                                    <input type="checkbox" name="chkbox[]" value="{!! $user->id !!}">
+                                    <input type="checkbox" name="usrChkBox[]" value="{!! $user->id !!}">
                                 </th>
                                 <td>{{ $user->id }}</td>
-                                <td><a href="{{ route('user.info', ['id' => $user->id]) }}">{{ $user->name }}</a></td>
+                                <td>
+                                    <a href="{{ route('user.info', ['id' => $user->id]) }}">{{ $user->name }}</a>
+                                </td>
                                 <td>{{ $user->email }}</td>
-                                <td><a href="{{ route('statistic.user', ['id' => $user->id]) }}">Link</a></td>
+                                <td>{{ !is_null($user->banned_until) ? $user->banned_until : "" }}</td>
+                                <td>
+                                    <a href="{{ route('statistic.user', ['id' => $user->id]) }}">Link</a>
+                                </td>
                             </tr>
                         @endif
                     @endforeach
                     </tbody>
                     </table>
 
+                    <label for="banSelector">Ban for:</label>
                     <div class="input-group">
-                        <select class="custom-select" id="banSelector">
-                            <option selected>Choose...</option>
-                            <option value="1">Remove the ban</option>
+                        <select class="custom-select" name="banSelector">
+                            <option selected></option>
+                            <option value="0">Remove the ban</option>
                             <option value="1">One day</option>
                             <option value="2">One week</option>
                             <option value="3">One month</option>
                         </select>
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                            <button class="btn btn-outline-secondary" type="submit" id="submit" disabled>Submit</button>
                         </div>
                     </div>
 
@@ -61,4 +68,30 @@
         </div>
     </div>
 
+@endsection
+
+@section('js')
+    <script>
+        // Enable Submit button if ban time selected
+        $(function () {
+            $("select.custom-select").change(function() {
+                if ($(this).find("option:selected").text() != '') {
+                    $("button#submit").attr('disabled', false);
+                } else {
+                    $("button#submit").attr('disabled', true);
+                }
+            });
+        });
+        // Check if at least one user is selected
+        // $(function () {
+        //     $("button#submit").on('click', function () {
+        //         if ($('input[type=checkbox]').is(":checked")) {
+        //             alertify.success('any one is checked');
+        //         }
+        //         else {
+        //             alertify.error('none is checked');
+        //         }
+        //     })
+        // });
+    </script>
 @endsection
