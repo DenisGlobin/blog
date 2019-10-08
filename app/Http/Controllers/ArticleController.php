@@ -39,7 +39,8 @@ class ArticleController extends Controller
      */
     public function __construct()
     {
-        //
+        $this->middleware(['auth', 'verified'])
+            ->only(['showAddArticleForm', 'addNewArticle', 'showEditArticleForm', 'updateArticle', 'deleteArticle']);
     }
 
     /**
@@ -134,8 +135,10 @@ class ArticleController extends Controller
      */
     public function showAddArticleForm()
     {
-        $this->middleware(['auth', 'verified' , 'not.banned.user']);
-        return view('user.add_article', ['tags' => Tag::get()]);
+        if (Auth::user()->can('create', Article::class)) {
+            return view('user.add_article', ['tags' => Tag::get()]);
+        }
+        return redirect()->back();
     }
 
     /**
@@ -146,41 +149,40 @@ class ArticleController extends Controller
      */
     public function addNewArticle(ArticleRequest $request)
     {
-        $this->middleware(['auth', 'verified', 'not.banned.user']);
-        $article = new Article();
-        $article->title = $request->input('title');
-        $article->full_text = $request->input('fullText');
-        $article->short_text = substr($request->input('fullText'), 0,100);
-        $article->is_active = $request->input('isActive');
-        if ($request->has('isActive')) {
-            $article->is_active = true;
+        if (Auth::user()->can('create', Article::class)) {
+            $article = new Article();
+            $article->title = $request->input('title');
+            $article->full_text = $request->input('fullText');
+            $article->short_text = substr($request->input('fullText'), 0, 100);
+            $article->is_active = $request->input('isActive');
+            if ($request->has('isActive')) {
+                $article->is_active = true;
+            } else {
+                $article->is_active = false;
+            }
+            $article->user_id = Auth::id();
+            // Save article
+            try {
+                $article->save();
+            } catch (\Exception $ex) {
+                $request->session()->flash('error', __('article.save_err') . $ex->getMessage());
+                return view('user.add_article');
+            }
+            // Add tags
+            $tags = $request->tags;
+            if (!is_null($tags)) {
+                $this->saveTags($article, $request->tags);
+            }
+            // Get articles
+            $data = [
+                'articles' => Article::latest()->paginate(5),
+                'dates' => $this->getArticleArchive(),
+                'tags' => Tag::get(),
+            ];
+            $request->session()->flash('success', __('article.save_ok'));
+            return view('index', $data);
         }
-        else {
-            $article->is_active = false;
-        }
-        $article->user_id = Auth::id();
-
-        // Save article
-        try {
-            $article->save();
-        }
-        catch (\Exception $ex) {
-            $request->session()->flash('error', __('article.save_err') . $ex->getMessage());
-            return view('user.add_article');
-        }
-        // Add tags
-        $tags = $request->tags;
-        if (!is_null($tags)) {
-            $this->saveTags($article, $request->tags);
-        }
-        // Get articles
-        $data = [
-            'articles' => Article::latest()->paginate(5),
-            'dates' => $this->getArticleArchive(),
-            'tags' => Tag::get(),
-        ];
-        $request->session()->flash('success', __('article.save_ok'));
-        return view('index', $data);
+        return redirect()->back();
     }
 
     /**
@@ -191,14 +193,17 @@ class ArticleController extends Controller
      */
     public function showEditArticleForm(int $articleID)
     {
-        $this->middleware(['auth', 'verified', 'not.banned.user']);
-        $data = [
-            'article' => Article::findOrFail($articleID),
-            'comments' => Comment::where('article_id', $articleID)
-                ->orderBy('created_at', 'desc')->get(),
-            'tags' => Tag::get(),
-        ];
-        return view('user.edit_article', $data);
+        $article = Article::findOrFail($articleID);
+        if (Auth::user()->can('update', $article)) {
+            $data = [
+                'article' => $article,
+                'comments' => Comment::where('article_id', $articleID)
+                           ->orderBy('created_at', 'desc')->get(),
+                'tags' => Tag::get(),
+            ];
+            return view('user.edit_article', $data);
+        }
+        return redirect()->back();
     }
 
     /**
@@ -209,10 +214,10 @@ class ArticleController extends Controller
      */
     public function updateArticle(ArticleRequest $request)
     {
-        $this->middleware(['auth', 'verified', 'not.banned.user']);
         $id = (int)$request->input('id');
         $article = Article::find($id);
-        if ($article->user->id == Auth::id()) {
+        if (Auth::user()->can('update', $article)) {
+        //if ($article->user->id == Auth::id()) {
             $article->title = (string)$request->input('title');
             $article->full_text = (string)$request->input('fullText');
             $article->short_text = substr($request->input('fullText'), 0,100);
@@ -257,11 +262,11 @@ class ArticleController extends Controller
      */
     public function deleteArticle(Request $request)
     {
-        $this->middleware(['auth', 'verified']);
         if($request->ajax()) {
             $id = (int)$request->input('id');
             $article = Article::find($id);
-            if ($article->user->id == Auth::id() || Auth::user()->is_admin) {
+            if (Auth::user()->can('delete', $article)) {
+            //if ($article->user->id == Auth::id() || Auth::user()->is_admin) {
                 $article->delete();
             } else {
                 $request->session()->flash('error', __('article.delete_perm_err'));

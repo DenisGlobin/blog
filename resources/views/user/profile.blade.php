@@ -8,9 +8,7 @@
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
                 @if (isset($user->banned_until))
-                    <div class="alert alert-danger" role="alert">
-                        <strong>Вы забанены до {{ $user->banned_until }}</strong>
-                    </div>
+                    @include('inc.banned')
                 @endif
                 <form method="POST" action="{{ route('profile.edit') }}">
                     @csrf

@@ -16,7 +16,7 @@ class CommentController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'verified', 'not.banned.user']);
+        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -27,19 +27,21 @@ class CommentController extends Controller
      */
     public function addComment(CommentRequest $request)
     {
-        $comment = new Comment();
-        $comment->message = $request->input('message');
-        $comment->user_id = Auth::id();
-        $comment->article_id = $request->input('articleID');
-        try {
-            $comment->save();
-        }
-        catch (\Exception $ex) {
-            $request->session()->flash('error', __('comment.save_err') . $ex->getMessage());
+        if (Auth::user()->can('create', Comment::class)) {
+            $comment = new Comment();
+            $comment->message = $request->input('message');
+            $comment->user_id = Auth::id();
+            $comment->article_id = $request->input('articleID');
+            try {
+                $comment->save();
+            } catch (\Exception $ex) {
+                $request->session()->flash('error', __('comment.save_err') . $ex->getMessage());
+                return redirect()->route('article', ['id' => $request->input('articleID')]);
+            }
+            $request->session()->flash('success', __('comment.save_ok'));
             return redirect()->route('article', ['id' => $request->input('articleID')]);
         }
-        $request->session()->flash('success', __('comment.save_ok'));
-        return redirect()->route('article', ['id' => $request->input('articleID')]);
+        return redirect()->back();
     }
 
     public function deleteComment(Request $request)
@@ -47,7 +49,7 @@ class CommentController extends Controller
         if($request->ajax()) {
             $id = (int)$request->input('id');
             $comment = Comment::find($id);
-            if ($comment->user->id == Auth::id()) {
+            if (Auth::user()->can('delete', $comment)) {
                 $comment->delete();
             } else {
                 $request->session()->flash('error', __('comment.delete_perm_err'));
@@ -60,7 +62,7 @@ class CommentController extends Controller
     {
         $commentID = (int)$request->input('commentID');
         $comment = Comment::find($commentID);
-        if ($comment->user->id == Auth::id()) {
+        if (Auth::user()->can('update', $comment)) {
             $comment->message = (string)$request->input('message');
             $data = [
                 'article' => $comment->article,

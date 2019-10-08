@@ -7,11 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 trait ArticlesArchive
 {
-    protected static $handlers = array(
-        'allArticles'     => 'getArticlesByMonths',
-        'userArticle'  => 'SimplePie_Cache_Memcache',
-    );
-
     /**
      * Get all articles from months sorted by date
      *
@@ -51,7 +46,7 @@ trait ArticlesArchive
      *
      * @param string $handler
      * @param null $userID
-     * @return array|void
+     * @return array
      */
     protected function getArticleArchive($handler = "allArticles", $userID = null)
     {
@@ -66,7 +61,7 @@ trait ArticlesArchive
                     $months = $this->getUserArticleByMonth($userID);
                     break;
                 } else {
-                    return;
+                    return null;
                 }
         }
         $index = 0;

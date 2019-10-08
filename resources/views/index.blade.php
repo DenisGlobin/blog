@@ -5,6 +5,10 @@
     <div class="col-md-8 blog-main">
         <h3 class="pb-3 mb-4 font-italic border-bottom">Articles</h3>
 
+            @if (isset(Auth::user()->banned_until))
+                @include('inc.banned')
+            @endif
+
             @if(! $articles->isEmpty())
                 @foreach($articles as $article)
                     <div class="blog-post">
@@ -15,7 +19,7 @@
                                 <a href="{{ route('user.info', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
                             @endauth
                             @guest
-                                <a href="{{ route('user.article', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
+                                <a href="{{ route('user.articles', ['id' => $article->user->id]) }}">{{ $article->user->name }}</a>
                             @endguest
                         </p>
 
@@ -33,28 +37,25 @@
                                     <a href="{{ route('article', ['id' => $article->id]) }}">Read more</a>
                                 </div>
                                 {{-- Show Delete and Edit buttons for the article's owner --}}
-                                @if($article->user->id == Auth::id())
+                                {{--@if($article->user->id == Auth::id())--}}
+                                @can(['update', 'delete'], $article)
                                     <div class="col-3">
                                         <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
                                 {{-- Show Delete button for Admin --}}
-                                @elseif(Auth::check() && Auth::user()->is_admin)
+                                {{--@elseif(Auth::check() && Auth::user()->is_admin)--}}
+                                @elsecan('delete', $article)
                                     <div class="col-3">
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
-                                @endif
+                                @endcan
                             </div>
                         </div>
                         <hr/>
                     </div>
                 @endforeach
 
-                @if (session('error'))
-                    <div class="alert alert-danger" role="alert">
-                        {{ session('error') }}
-                    </div>
-                @endif
                 <div class="row justify-content-center">
                     {!! $articles->render() !!}
                 </div>
