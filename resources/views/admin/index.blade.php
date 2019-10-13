@@ -82,16 +82,5 @@
                 }
             });
         });
-        // Check if at least one user is selected
-        // $(function () {
-        //     $("button#submit").on('click', function () {
-        //         if ($('input[type=checkbox]').is(":checked")) {
-        //             alertify.success('any one is checked');
-        //         }
-        //         else {
-        //             alertify.error('none is checked');
-        //         }
-        //     })
-        // });
     </script>
 @endsection

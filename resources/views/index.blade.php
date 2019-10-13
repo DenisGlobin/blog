@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">Articles</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('article.articles')</h3>
 
             @if (isset(Auth::user()->banned_until))
                 @include('inc.banned')
@@ -34,17 +34,15 @@
                         <div class="container">
                             <div class="row justify-content-between">
                                 <div class="col-5">
-                                    <a href="{{ route('article', ['id' => $article->id]) }}">Read more</a>
+                                    <a href="{{ route('article', ['id' => $article->id]) }}">@lang('article.read_more')</a>
                                 </div>
                                 {{-- Show Delete and Edit buttons for the article's owner --}}
-                                {{--@if($article->user->id == Auth::id())--}}
                                 @can(['update', 'delete'], $article)
                                     <div class="col-3">
                                         <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
                                 {{-- Show Delete button for Admin --}}
-                                {{--@elseif(Auth::check() && Auth::user()->is_admin)--}}
                                 @elsecan('delete', $article)
                                     <div class="col-3">
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
@@ -60,7 +58,7 @@
                     {!! $articles->render() !!}
                 </div>
             @else
-                <span>{{ __('article.no_articles') }}</span>
+                <span>@lang('article.no_articles')</span>
             @endif
     </div>
 @endsection
@@ -70,18 +68,18 @@
         $(function(){
             $(".btn-outline-danger").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("{{ __('article.delete') }}", function () {
+                alertify.confirm("@lang('article.delete')", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('article.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("{{ __('article.delete_ok') }}");
+                            alertify.success("@lang('article.delete_ok')");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("{{ __('article.cancel') }}");
+                    alertify.error("@lang('article.cancel')");
                 });
             })
         });
@@ -90,7 +88,7 @@
 
 @section('archive')
     <div class="p-3">
-        <h4 class="font-italic">Archives</h4>
+        <h4 class="font-italic">@lang('menu.archives')</h4>
         <ol class="list-unstyled mb-0">
             @foreach($dates as $date)
                 <li class="blog-post-meta">
@@ -104,7 +102,7 @@
 
 @section('tags')
     <div class="p-3 mb-3 bg-light rounded">
-        <h4 class="font-italic">Tags</h4>
+        <h4 class="font-italic">@lang('menu.tags')</h4>
         <p class="mb-0">
             @foreach($tags as $tag)
                 <a class="text-dark" href="#">{{ $tag->name }}</a>,

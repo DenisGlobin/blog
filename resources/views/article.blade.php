@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">Article</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('article.articles')</h3>
 
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column align-items-start">
@@ -25,7 +25,7 @@
                 <div class="container">
                     <div class="row justify-content-between">
                         <div class="col-5">
-                            <a href="{{ route('articles') }}">{{ __('article.main_page') }}</a>
+                            <a href="{{ route('articles') }}">@lang('article.main_page')</a>
                         </div>
                         {{-- Show Delete and Edit buttons for the article's owner --}}
                         @can(['update', 'delete'], $article)
@@ -46,7 +46,7 @@
         </div>
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
-                <h2 class="blog-post-title">Comments</h2>
+                <h2 class="blog-post-title">@lang('comment.title')</h2>
                 @auth
                     @include('inc.comments.add_comment_form')
                 @endauth
@@ -63,18 +63,18 @@
         $(function () {
             $("button[id^='articleDel']").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("{{ __('article.delete') }}", function () {
+                alertify.confirm("@lang('article.delete')", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('article.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("{{ __('article.delete_ok') }}");
+                            alertify.success("@lang('article.delete_ok')");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("{{ __('article.cancel') }}");
+                    alertify.error("@lang('article.cancel')");
                 });
             })
         });
@@ -82,18 +82,18 @@
         $(function () {
             $("button[id^='commentDel']").on('click', function () {
                 let id = $(this).attr("value");
-                alertify.confirm("{{ __('comment.delete') }}", function () {
+                alertify.confirm("@lang('comment.delete')", function () {
                     $.ajax({
                         type: "delete",
                         url: "{{ route('comment.delete') }}",
                         data: {_token: "{{ csrf_token() }}", id:id},
                         complete: function () {
-                            alertify.success("{{ __('comment.delete_ok') }}");
+                            alertify.success("@lang('comment.delete_ok')");
                             location.reload();
                         }
                     })
                 }, function () {
-                    alertify.error("{{ __('article.cancel') }}");
+                    alertify.error("@lang('article.cancel')");
                 });
             })
         });
@@ -119,7 +119,7 @@
                 // Scrolling page to comment's textarea
                 var dn = $("div#cancelEdt").offset().top;
                 $('html, body').animate({scrollTop: dn}, 1000);
-                alertify.success("Comment editing");
+                alertify.success("@lang('comment.editing')");
             })
         });
         // Cancel editing comment
@@ -128,7 +128,7 @@
             $("textarea#message").val('');
             // Change action url
             $("#commentForm").attr("action", "{{ route('comment.add') }}");
-            alertify.error("Comment editing has been canceled");
+            alertify.error("@lang('comment.edit_cancel')");
         }
     </script>
 @endsection

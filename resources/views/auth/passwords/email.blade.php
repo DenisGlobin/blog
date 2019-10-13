@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">{{ __('authforms.reset_pwd') }}</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('authforms.reset_pwd')</h3>
 
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
@@ -17,7 +17,7 @@
                     @csrf
 
                     <div class="form-group row">
-                        <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('authforms.email') }}</label>
+                        <label for="email" class="col-md-4 col-form-label text-md-right">@lang('authforms.email')</label>
 
                         <div class="col-md-6">
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -33,7 +33,7 @@
                     <div class="form-group row mb-0">
                         <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                {{ __('authforms.pwd_reset_link') }}
+                                @lang('authforms.pwd_reset_link')
                             </button>
                         </div>
                     </div>

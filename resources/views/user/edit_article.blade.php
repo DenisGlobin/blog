@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">Edit the article</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('article.article_edit')</h3>
 
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
@@ -10,7 +10,7 @@
                     @csrf
                     <input id="id" name="id" type="hidden" value="{{ isset($article->id) ? $article->id : null }}">
                     <div class="form-group">
-                        <label for="title">Title</label>
+                        <label for="title">@lang('article.article_title')</label>
                         <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title"
                                value="{{ isset($article) ? $article->title : 'Type title of the article' }}">
                         @error('title')
@@ -18,7 +18,7 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="fullText">Text</label>
+                        <label for="fullText">@lang('article.article_txt')</label>
                         <textarea class="form-control @error('fullText') is-invalid @enderror" id="fullText" name="fullText" rows="5">{{ isset($article) ? $article->full_text : 'Type text' }}</textarea>
                         @error('fullText')
                         <div class="alert alert-danger">{{ $message }}</div>
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tags" id="tagsLabel">Tags: </label>
+                        <label for="tags" id="tagsLabel">@lang('article.article_tags')</label>
                         @foreach($article->tags as $tag)
                             <button type='button' class='btn btn-light btn-sm fade show' onclick='deleteTag(event)' value="{{ $tag->name }}">
                                 {{ $tag->name }}<span class='badge badge-secondary' aria-hidden='true'>&times;</span>
@@ -49,17 +49,17 @@
                         <div class="form-check">
                             @if($article->is_active == true)
                                 <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked>
-                                <label class="form-check-label" for="gridCheck">Publish new article</label>
+                                <label class="form-check-label" for="gridCheck">@lang('article.article_publish')</label>
                             @else
                                 <input class="form-check-input" type="checkbox" id="isActive" name="isActive">
-                                <label class="form-check-label" for="gridCheck">Publish new article</label>
+                                <label class="form-check-label" for="gridCheck">@lang('article.article_publish')</label>
                             @endif
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">@lang('article.edit_btn')</button>
                 </form>
                 <br>
-                <a href="{{ route('article', ["id" => $article->id]) }}">Return back</a>
+                <a href="{{ route('article', ["id" => $article->id]) }}">@lang('article.return')</a>
                 @if (session('error'))
                     <div class="alert alert-danger" role="alert">
                         {{ session('error') }}

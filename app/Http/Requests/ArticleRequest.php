@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Article;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ArticleRequest extends FormRequest
@@ -14,6 +15,8 @@ class ArticleRequest extends FormRequest
     public function authorize()
     {
         return true;
+//        $article = Article::find($this->route('article.edit'));
+//        return $article && $this->user()->can('update', $article);
     }
 
     /**

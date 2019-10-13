@@ -53,7 +53,7 @@
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="btn btn-light dropdown-item" href="{{ route('profile') }}">My profile</a>
+                <a class="btn btn-light dropdown-item" href="{{ route('profile') }}">@lang('profile.title')</a>
                 <a class="btn btn-light dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
@@ -77,6 +77,8 @@
 
                 <!-- Right sidebar -->
                 <aside class="col-md-4 blog-sidebar">
+                    <a href="{{ route('set.locale', ['locale' => 'en']) }}">En</a> |
+                    <a href="{{ route('set.locale', ['locale' => 'ru']) }}">Ru</a>
                     @hasSection('tags')
                         @yield('tags')
                     @endif

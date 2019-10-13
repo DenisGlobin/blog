@@ -217,7 +217,6 @@ class ArticleController extends Controller
         $id = (int)$request->input('id');
         $article = Article::find($id);
         if (Auth::user()->can('update', $article)) {
-        //if ($article->user->id == Auth::id()) {
             $article->title = (string)$request->input('title');
             $article->full_text = (string)$request->input('fullText');
             $article->short_text = substr($request->input('fullText'), 0,100);

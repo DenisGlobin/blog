@@ -32,5 +32,5 @@
     @endforeach
 
 @else
-    <span>{{ __('article.no_comments') }}</span>
+    <span>@lang('article.no_comments')</span>
 @endif

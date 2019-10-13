@@ -21,7 +21,15 @@ Route::get('/user/{id}/article', 'ArticleController@getUserArticles')
     ->where(['id' => '[0-9]+']);
 Route::get('/articles/from/{month}/{year}', 'ArticleController@getArticlesFromMonth')
     ->name('articles.from')
-    ->where(['month' => '[0-9]+' , 'year' => '[0-9]+']);
+    ->where(['month' => '[0-9]+', 'year' => '[0-9]+']);
+Route::get('/setlocale/{locale}', function ($locale) {
+    //App::setLocale($locale);
+    if (in_array($locale, \Config::get('app.locales'))) {
+        \Illuminate\Support\Facades\Session::put('locale', $locale);
+    }
+
+    return redirect()->back();
+})->name('set.locale');
 
 // User routes
 Route::middleware(['auth', 'verified'])->group(function () {

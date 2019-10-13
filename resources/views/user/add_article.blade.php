@@ -2,21 +2,21 @@
 
 @section('content')
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">Add new article</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('article.new_article')</h3>
 
         <div class="card flex-md-row mb-4 box-shadow">
             <div class="card-body d-flex flex-column">
                 <form id="formArticle" method="post" action="{{ route('article.add') }}">
                     @csrf
                     <div class="form-group">
-                        <label for="title">Title</label>
+                        <label for="title">@lang('article.article_title')</label>
                         <input type="text" class="form-control @error('title') is-invalid @enderror" id="title" name="title">
                         @error('title')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="fullText">Text</label>
+                        <label for="fullText">@lang('article.article_txt')</label>
                         <textarea class="form-control @error('fullText') is-invalid @enderror" id="fullText" name="fullText" rows="5"></textarea>
                         @error('fullText')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -24,7 +24,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tags" id="tagsLabel">Tags: </label>
+                        <label for="tags" id="tagsLabel">@lang('article.article_tags')</label>
                         <div class="input-group">
                             <input type="text" id="tags" name="tags" list="tagsList">
                             <datalist id="tagsList">
@@ -41,10 +41,10 @@
                     <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked>
-                            <label class="form-check-label" for="gridCheck">Publish new article</label>
+                            <label class="form-check-label" for="gridCheck">@lang('article.article_publish')</label>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add article</button>
+                    <button type="submit" class="btn btn-primary">@lang('article.save_btn')</button>
                 </form>
                 @if (session('error'))
                     <div class="alert alert-danger" role="alert">
@@ -78,20 +78,13 @@
         }
         // Add tags to post's data
         formArticle.onsubmit = (e) => {
-            //e.preventDefault();
             // Delete add tags field
             let data = new FormData(e.target);
             data.delete('tags');
             // Add tags to form
             $.each($("button.fade"), function () {
-                //data.append('tags[]', $(this).val());
                 $("form#formArticle").append('<input type="hidden" name="tags[]" value="'+$(this).val()+'">');
             });
-
-            {{--fetch("{{ route('article.add') }}", {--}}
-                {{--method: 'POST',--}}
-                {{--body: data,--}}
-            {{--});--}}
         }
     </script>
 @endsection
