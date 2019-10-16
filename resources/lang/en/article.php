@@ -3,7 +3,10 @@
 return [
 
     'articles' => 'Articles',
+    'usr_articles' => 'Articles by :user',
     'article' => 'Article',
+    'search_articles' => 'Showing result for :request',
+    'tag_articles' => 'Showing results by tag :tag',
     'article_edit' => 'Edit the article',
     'new_article' => 'Add new article',
     'article_title' => 'Title',

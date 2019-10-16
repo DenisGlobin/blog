@@ -14,6 +14,7 @@
 Auth::routes();
 Auth::routes(['verify' => true]);
 
+// Show articles
 Route::get('/', 'ArticleController@index')->name('articles');
 Route::get('/{id}', 'ArticleController@showArticle')->name('article')->where(['id' => '[0-9]+']);
 Route::get('/user/{id}/article', 'ArticleController@getUserArticles')
@@ -22,14 +23,19 @@ Route::get('/user/{id}/article', 'ArticleController@getUserArticles')
 Route::get('/articles/from/{month}/{year}', 'ArticleController@getArticlesFromMonth')
     ->name('articles.from')
     ->where(['month' => '[0-9]+', 'year' => '[0-9]+']);
+// Languages switch
 Route::get('/setlocale/{locale}', function ($locale) {
-    //App::setLocale($locale);
     if (in_array($locale, \Config::get('app.locales'))) {
         \Illuminate\Support\Facades\Session::put('locale', $locale);
     }
-
     return redirect()->back();
 })->name('set.locale');
+// Search
+Route::get('/search', 'ArticleController@showSearchForm')->name('search.form');
+Route::post('/searching', 'ArticleController@getQueryResults')->name('searching');
+Route::get('/tag/{tag}', 'ArticleController@getArticlesByTag')
+    ->name('tag')
+    ->where(['tag' => '[0-9A-Za-z]+']);
 
 // User routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -41,10 +47,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->where(['token' => '[0-9A-Za-z]+']);
     Route::get('/user/{id}', 'UserController@getUserInfo')->name('user.info')->where(['id' => '[0-9]+']);
     // Articles
-    Route::get('/article/new', 'ArticleController@showAddArticleForm')->name('show.addarticle.form');
+    Route::get('/article/new', 'ArticleController@showAddArticleForm')->name('add.article.form');
     Route::post('/article/add', 'ArticleController@addNewArticle')->name('article.add');
     Route::get('/article/edit/{id}', 'ArticleController@showEditArticleForm')
-        ->name('show.editarticle.form')
+        ->name('edit.article.form')
         ->where(['id' => '[0-9]+']);
     Route::post('/article/edit', 'ArticleController@updateArticle')->name('article.edit');
     Route::delete('/article/delete', 'ArticleController@deleteArticle')->name('article.delete');

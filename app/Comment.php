@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Library\Date\BlogDateFormat;
+use App\Library\BlogDateFormat;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model

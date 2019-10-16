@@ -3,7 +3,10 @@
 return [
 
     'articles' => 'Статьи',
+    'usr_articles' => 'Статьи пользователя :user',
     'article' => 'Статья',
+    'search_articles' => 'Показаны результаты по запросу :request',
+    'tag_articles' => 'Showing results by tag :tag',
     'article_edit' => 'Редактировать статью',
     'new_article' => 'Добавить новую статью',
     'article_title' => 'Заголовок',

@@ -22,7 +22,7 @@ class Tag extends Model
         'created_at', 'updated_at',
     ];
 
-    public function article()
+    public function articles()
     {
         return $this->belongsToMany(Article::class);
     }

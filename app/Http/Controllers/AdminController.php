@@ -6,7 +6,7 @@ use App\Http\Requests\BanRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
-use App\Library\Date\ArticlesArchive;
+use App\Library\ArticlesArchive;
 
 class AdminController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Library\Date;
+namespace App\Library;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;

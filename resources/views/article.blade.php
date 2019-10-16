@@ -30,7 +30,7 @@
                         {{-- Show Delete and Edit buttons for the article's owner --}}
                         @can(['update', 'delete'], $article)
                             <div class="col-3">
-                                <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                <a class="btn btn-outline-success btn-sm" href="{{ route('edit.article.form', ['id' => $article->id]) }}" role="button">Edit</a>
                                 <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del" id="articleDel">Delete</button>
                             </div>
                         {{-- Show Delete button for Admin --}}

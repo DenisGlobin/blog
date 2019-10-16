@@ -5,33 +5,20 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Comment;
 use App\Tag;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Library\Date\ArticlesArchive;
+use App\Library\ArticlesArchive;
+use App\Library\SearchQuery;
+use App\Library\TagsProcessing;
 
 class ArticleController extends Controller
 {
     use ArticlesArchive;
+    use SearchQuery;
+    use TagsProcessing;
 
-    protected function saveTags(Article $article, array $tags)
-    {
-        // Delete duplicates
-        $tags = array_unique($tags);
-        foreach ($tags as $tag) {
-            // If the tag exists in the DB
-            $exsistTag = Tag::where('name', $tag)->first();
-            if ($exsistTag != null) {
-                $article->tags()->attach($exsistTag->id);
-            } else {
-                // Add the tag to DB
-                $newTag = new Tag();
-                $newTag->name = (string) $tag;
-                $newTag->save();
-                $article->tags()->attach($newTag->id);
-            }
-        }
-    }
     /**
      * Create a new controller instance.
      *
@@ -51,6 +38,7 @@ class ArticleController extends Controller
     public function index()
     {
         $data = [
+            'title' => __('article.articles'),
             'articles' => Article::latest()
                         ->where('is_active', true)
                         ->paginate(5),
@@ -86,8 +74,10 @@ class ArticleController extends Controller
      */
     public function getUserArticles(int $userID)
     {
+        $user = User::find($userID);
         if (Auth::check() && Auth::id() == $userID) {
         $data = [
+            'title' => __('article.usr_articles', ['user' => $user->name]),
             'articles' => Article::latest()
                         ->where('user_id', $userID)
                         ->paginate(5),
@@ -96,6 +86,7 @@ class ArticleController extends Controller
         ];
         } else {
             $data = [
+                'title' => __('article.usr_articles', ['user' => $user->name]),
                 'articles' => Article::latest()
                         ->where('user_id', $userID)
                         ->where('is_active', true)
@@ -117,6 +108,7 @@ class ArticleController extends Controller
     public function getArticlesFromMonth(int $month, int $year)
     {
         $data = [
+            'title' => __('article.articles'),
             'articles' => Article::latest()
                         ->where('is_active', true)
                         ->whereMonth('created_at', $month)
@@ -175,6 +167,7 @@ class ArticleController extends Controller
             }
             // Get articles
             $data = [
+                'title' => __('article.articles'),
                 'articles' => Article::latest()->paginate(5),
                 'dates' => $this->getArticleArchive(),
                 'tags' => Tag::get(),
@@ -235,7 +228,7 @@ class ArticleController extends Controller
             // Delete old tags
             $article->tags()->detach();
             // Add tags
-            $this->saveTags($article, $request->tags);
+            $this->saveTags($article, (array) $request->tags);
             // Save changes
             try {
                 $article->save();
@@ -272,5 +265,36 @@ class ArticleController extends Controller
                 return redirect()->back();
             }
         }
+    }
+
+    public function showSearchForm()
+    {
+        $data = [
+            'dates' => $this->getArticleArchive(),
+            'tags' => Tag::get(),
+        ];
+        return view('search', $data);
+    }
+
+    public function getQueryResults(Request $request)
+    {
+        $data = [
+            'title' => __('article.search_articles', ['request' => (string)$request->input('query')]),
+            'articles' => $this->searchQueryProcessing((string)$request->input('query')),
+            'dates' => $this->getArticleArchive(),
+            'tags' => Tag::get(),
+        ];
+        return view('index', $data);
+    }
+
+    public function getArticlesByTag(string $tag)
+    {
+        $data = [
+            'title' => __('article.tag_articles', ['tag' => $tag]),
+            'articles' => $this->getRelevantArticles($tag),
+            'dates' => $this->getArticleArchive(),
+            'tags' => Tag::get(),
+        ];
+        return view('index', $data);
     }
 }

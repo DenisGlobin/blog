@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">@lang('article.articles')</h3>
+        <h3 class="pb-3 mb-4 font-italic border-bottom">{{ $title }}</h3>
 
             @if (isset(Auth::user()->banned_until))
                 @include('inc.banned')
@@ -27,7 +27,7 @@
                         <div class="container">
                             <p class="blog-post-meta">Tags:
                             @foreach($article->tags as $tag)
-                                <a class="text-secondary" href="#">[{{ $tag->name }}]   </a>
+                                <a class="text-secondary" href="{{ route('tag', ['tag' => $tag->name]) }}">[{{ $tag->name }}]   </a>
                             @endforeach
                             </p>
                         </div>
@@ -39,7 +39,7 @@
                                 {{-- Show Delete and Edit buttons for the article's owner --}}
                                 @can(['update', 'delete'], $article)
                                     <div class="col-3">
-                                        <a class="btn btn-outline-success btn-sm" href="{{ route('show.editarticle.form', ['id' => $article->id]) }}" role="button">Edit</a>
+                                        <a class="btn btn-outline-success btn-sm" href="{{ route('edit.article.form', ['id' => $article->id]) }}" role="button">Edit</a>
                                         <button type="button" class="btn btn-outline-danger btn-sm" value="{{ $article->id }}" name="del">Delete</button>
                                     </div>
                                 {{-- Show Delete button for Admin --}}
@@ -105,7 +105,7 @@
         <h4 class="font-italic">@lang('menu.tags')</h4>
         <p class="mb-0">
             @foreach($tags as $tag)
-                <a class="text-dark" href="#">{{ $tag->name }}</a>,
+                <a class="text-dark" href="{{ route('tag', ['tag' => $tag->name]) }}">{{ $tag->name }}</a>,
             @endforeach
         </p>
     </div>
