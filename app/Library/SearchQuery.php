@@ -4,23 +4,26 @@ namespace App\Library;
 
 
 use App\Article;
-//use Illuminate\Support\Facades\DB;
 
 trait SearchQuery
 {
+    /**
+     * Get articles containing a search query
+     *
+     * @param string $query
+     * @return mixed
+     */
     protected function searchQueryProcessing(string $query)
     {
-        //return DB::table('articles')
-          //  ->select(DB::raw("*"))
-            //->where('is_active', true)
-            //->whereNull('deleted_at')
-            //->whereRaw('title or full_text like %'. $query .'%')
-//        ->whereRaw('title or full_text like %?%', [$query])
-//            ->orderBy('created_at', 'ASC')
-//            ->get();
-        return Article::latest()
-            ->where('title', 'ilike', '%'.$query.'%')
-            ->orWhere('full_text', 'ilike', '%'.$query.'%')
+//        return Article::latest()
+//            ->where('title', 'ilike', '%'.$query.'%')
+//            ->orWhere('full_text', 'ilike', '%'.$query.'%')
+//            ->paginate(5);
+
+        return Article::selectRaw("*, word_similarity(title, ?) AS sml_t, word_similarity(full_text, ?) AS sml_f", [$query, $query])
+            ->whereRaw("word_similarity(title, ?) > 0.05", [$query])
+            ->orWhereRaw("word_similarity(full_text, ?) > 0.05", [$query])
+            ->orderByRaw('sml_t, sml_f DESC')
             ->paginate(5);
     }
 }

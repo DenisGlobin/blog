@@ -4,9 +4,16 @@ namespace App\Library;
 
 use App\Article;
 use App\Tag;
+use Illuminate\Database\Eloquent\Builder;
 
 trait TagsProcessing
 {
+    /**
+     * Save new tags to DB
+     *
+     * @param Article $article
+     * @param array $tags
+     */
     protected function saveTags(Article $article, array $tags)
     {
         // Delete duplicates
@@ -26,11 +33,32 @@ trait TagsProcessing
         }
     }
 
+    /**
+     * Get articles with required tag
+     *
+     * @param string $tagName
+     * @return mixed
+     */
     protected function getRelevantArticles(string $tagName)
     {
         $articles = Article::whereHas('tags', function ($query) use ($tagName) {
             $query->where('name', 'ilike', $tagName);
         })->paginate(5);
         return $articles;
+    }
+
+    /**
+     * Get tags chart statistic
+     *
+     * @return array
+     */
+    protected function getTagsChart()
+    {
+        $tagsCounter = array();
+        $tags = Tag::withCount('articles')->get();
+        foreach ($tags as $tag) {
+            $tagsCounter[$tag->name] = $tag->articles_count;
+        }
+        return $tagsCounter;
     }
 }

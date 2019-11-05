@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BanRequest;
+use App\Http\Requests\StatisticRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
-use App\Library\ArticlesArchive;
+use App\Library\TagsProcessing;
+use App\Library\ArticlesAndCommentsStatistic;
 
 class AdminController extends Controller
 {
-    use ArticlesArchive;
+    use TagsProcessing;
+    use ArticlesAndCommentsStatistic;
 
+    protected $dateFrom;
+    protected $dateUntil;
     /**
      * Create a new controller instance.
      *
@@ -35,24 +40,69 @@ class AdminController extends Controller
         return view('admin.index', $data);
     }
 
-    public function getStatistic()
+    /**
+     * Get statistic from all adding new articles and comments
+     *
+     * @param int|null $userID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getStatistic(int $userID = null)
     {
+        $dates = $this->getAllDatesPeriod();
+        $this->dateFrom = $dates->getStartDate()->format('Y-m');
+        $this->dateUntil = $dates->getEndDate()->format('Y-m');
+        if (!is_null($userID)) {
+            $user = User::find($userID);
+            $title = "Statistic for user " . $user->name;
+        } else {
+            $title = "Statistic";
+        }
         $data = [
-            'dates' => $this->getArticleArchive("allArticles"),
-            'title' => 'Statistic for all articles'
+            'dates' => $dates,
+            'userID' => $userID,
+            'articlesAndCommentsStat' => $this->getArticlesAndCommentStatistic($this->dateFrom, $this->dateUntil, $userID),
+            'tagsCount' => $this->getTagsChart(),
+            'title' => $title
         ];
         return view('admin.statistic', $data);
     }
 
-    public function getUserStatistic(int $userID)
+    /**
+     * Set date period for statistic from all adding new articles and comments
+     *
+     * @param StatisticRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function setStatisticPeriod(StatisticRequest $request)
     {
+        $this->dateFrom = $request->input('dateFrom');
+        $this->dateUntil = $request->input('dateUntil');
+        $userID = $request->input('userID');
+        if (!is_null($userID)) {
+            $user = User::find($userID);
+            $title = "Statistic for user " . $user->name;
+        } else {
+            $title = "Statistic";
+        }
+
         $data = [
-            'dates' => $this->getArticleArchive("userArticles", $userID),
-            'title' => "Statistic for user's articles"
+            'selectedFrom' => $this->dateFrom,
+            'selectedUntil' => $this->dateUntil,
+            'userID' => $userID,
+            'dates' => $this->getAllDatesPeriod(),
+            'articlesAndCommentsStat' => $this->getArticlesAndCommentStatistic($this->dateFrom, $this->dateUntil, $userID),
+            'tagsCount' => $this->getTagsChart(),
+            'title' => $title
         ];
         return view('admin.statistic', $data);
     }
 
+    /**
+     * Set date while user is banned
+     *
+     * @param BanRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setBanForUsers(BanRequest $request)
     {
         $data = [
@@ -92,4 +142,5 @@ class AdminController extends Controller
         $request->session()->flash('success', __('banned.ban_ok'));
         return view('admin.index', $data);
     }
+
 }

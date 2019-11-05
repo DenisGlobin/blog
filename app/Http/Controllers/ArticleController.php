@@ -265,8 +265,14 @@ class ArticleController extends Controller
                 return redirect()->back();
             }
         }
+        return redirect()->back();
     }
 
+    /**
+     * Show page with search form
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showSearchForm()
     {
         $data = [
@@ -276,6 +282,12 @@ class ArticleController extends Controller
         return view('search', $data);
     }
 
+    /**
+     * Get searching results
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getQueryResults(Request $request)
     {
         $data = [
@@ -287,6 +299,12 @@ class ArticleController extends Controller
         return view('index', $data);
     }
 
+    /**
+     * Get articles with required tag
+     *
+     * @param string $tag
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function getArticlesByTag(string $tag)
     {
         $data = [

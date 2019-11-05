@@ -29,7 +29,7 @@ Route::get('/setlocale/{locale}', function ($locale) {
         \Illuminate\Support\Facades\Session::put('locale', $locale);
     }
     return redirect()->back();
-})->name('set.locale');
+    })->name('set.locale');
 // Search
 Route::get('/search', 'ArticleController@showSearchForm')->name('search.form');
 Route::post('/searching', 'ArticleController@getQueryResults')->name('searching');
@@ -63,8 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/profiles', 'AdminController@index')->name('admin.profiles');
     Route::get('/statistic', 'AdminController@getStatistic')->name('statistic');
-    Route::get('/statistic/user/{id}', 'AdminController@getUserStatistic')
+    Route::get('/statistic/user/{id}', 'AdminController@getStatistic')
         ->name('statistic.user')
         ->where(['id' => '[0-9]+']);
+    Route::post('/statistic/period', 'AdminController@setStatisticPeriod')->name('period.set');
     Route::post('/users/ban', 'AdminController@setBanForUsers')->name('users.ban');
 });
