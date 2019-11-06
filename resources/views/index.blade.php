@@ -84,6 +84,23 @@
             })
         });
     </script>
+
+    <script type="text/javascript">
+        Highcharts.chart('tagsCloud', {
+            series: [{
+                type: 'wordcloud',
+                data: [
+                    @foreach ($tagsCount as $key => $tagCount)
+                        {name: '{{$key}}', weight: {{ $tagCount }} },
+                    @endforeach
+                ],
+                name: 'Occurrences'
+            }],
+            title: {
+                text: '{{__('menu.tags')}}'
+            }
+        });
+    </script>
 @endsection
 
 @section('archive')
@@ -102,11 +119,8 @@
 
 @section('tags')
     <div class="p-3 mb-3 bg-light rounded">
-        <h4 class="font-italic">@lang('menu.tags')</h4>
-        <p class="mb-0">
-            @foreach($tags as $tag)
-                <a class="text-dark" href="{{ route('tag', ['tag' => $tag->name]) }}">{{ $tag->name }}</a>,
-            @endforeach
-        </p>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/wordcloud.js"></script>
+        <div id="tagsCloud"></div>
     </div>
 @endsection

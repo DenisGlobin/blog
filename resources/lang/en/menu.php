@@ -9,6 +9,6 @@ return [
     'statistic' => 'Statistic',
     'search' => 'Search',
     'archives' => 'Archive',
-    'tags' => 'Tags',
+    'tags' => 'Tags cloud',
 
 ];

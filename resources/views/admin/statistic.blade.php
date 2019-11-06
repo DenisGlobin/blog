@@ -140,37 +140,4 @@
             }]
         });
     </script>
-
-    <script>
-        $(function () {
-            $("select#yearFrom").on('change', function (e) {
-                let optionSelected = $("option:selected", this);
-                let year = this.value;
-                // Get months from selected year
-                let month = {!! json_encode($dates) !!};
-                // Delete old month's buttons
-                let buttonElem = $("label.btn-secondary");
-                buttonElem.remove();
-                // Show months buttons
-                // $("div#blyat").after("" +
-                //     "<div id='dateRow' class='btn-group btn-group-toggle' data-toggle='buttons'>" +
-                // "");
-                let monthRow = 1;
-                let i = 1;
-                month[year].forEach(function(element) {
-                //for (i=0; i < month[year].length; i++) {
-                    $("div#dateRow"+monthRow+"").append("" +
-                        "<label class='btn btn-secondary'>" +
-                        "<input type='radio' name='options' id='option1' autocomplete='off'>" + element +
-                        "</label>" +
-                    "");
-                    if ((i % 4) == 0) {
-                        monthRow++;
-                    }
-                    i++;
-                });
-                // $(".btn-outline-secondary").after("</div>");
-            });
-        });
-    </script>
 @endsection

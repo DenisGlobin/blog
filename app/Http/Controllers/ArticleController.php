@@ -44,6 +44,7 @@ class ArticleController extends Controller
                         ->paginate(5),
             'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
+            'tagsCount' => $this->getTagsChart(),
         ];
         return view('index', $data);
     }
