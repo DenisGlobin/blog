@@ -43,6 +43,7 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
+    {{--Column chart for articles and comments statistics--}}
     <script type="text/javascript">
         Highcharts.chart('columnchart', {
             chart: {
@@ -87,6 +88,7 @@
         });
     </script>
 
+    {{--Pie chart for tags statistics--}}
     <script type="text/javascript">
         // Radialize the colors
         Highcharts.setOptions({

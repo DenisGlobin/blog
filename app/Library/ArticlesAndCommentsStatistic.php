@@ -41,9 +41,10 @@ trait ArticlesAndCommentsStatistic
     /**
      * Get statistic of articles and comments from months
      *
-     * @param array $startDate
-     * @param array $endDate
-     * @return Collection
+     * @param string $startDate
+     * @param string $endDate
+     * @param null $userID
+     * @return array
      */
     protected function getArticlesAndCommentStatistic(string $startDate, string $endDate, $userID = null)
     {
@@ -51,67 +52,49 @@ trait ArticlesAndCommentsStatistic
         $dateFrom = Carbon::createFromIsoFormat('!YYYY-MM', $startDate, 'UTC');
         $dateUntil = Carbon::createFromIsoFormat('!YYYY-MM', $endDate, 'UTC');
         $period = CarbonPeriod::create($dateFrom,'1 month', $dateUntil->addMonth());
-        // Set WHERE RAW with userID
-        $userSelect = (!is_null($userID) ? ("user_id = " . $userID) : "user_id IS NOT NULL");
-        // Select count of all published articles from the related dates
-        $articleStats = DB::table('articles')
-            ->select(DB::raw("date_part('month', created_at) as month,
-                                    date_part('year', created_at) as year,
-                                    count(*) as artcl_total"))
-            ->where('is_active', 'true')
-            ->whereRaw($userSelect)
-            ->whereBetween('created_at', [$dateFrom, $dateUntil])
-            ->groupBy('year', 'month')
-            ->orderByRaw('year, month ASC')
-            ->get();
-        // Select count of all comments from the related dates
-        $commentsStats = DB::table('comments')
-            ->select(DB::raw("date_part('month', created_at) as month,
-                                    date_part('year', created_at) as year, 
-                                    count(*) as cmnt_total"))
-            ->whereRaw($userSelect)
-            ->whereBetween('created_at', [$dateFrom, $dateUntil])
-            ->groupBy('year', 'month')
-            ->orderByRaw('year, month ASC')
-            ->get();
-
-        $statistics = collect();
-        // Loop through the selected period for months
+        // Set dates period raw
+        $raw = "";
         foreach ($period as $date) {
             $month = $date->isoFormat('MM');
             $year = $date->isoFormat('YYYY');
-            // Search statistic ID of record for articles from current month.
-            // If no such record is found, then returns false.
-            $articlesMonthStatIndex = $articleStats->search(function ($item, $key) use($month, $year) {
-                return $item->year == $year && $item->month == $month;
-            });
-            // If ID is not false
-            if (is_int($articlesMonthStatIndex)) {
-                $article = $articleStats->get($articlesMonthStatIndex);
-                $artclTotal = $article->artcl_total;
-            } else {
-                $artclTotal = 0;
-            }
-            // Search statistic ID of record for comments from current month.
-            // If no such record is found, then returns false.
-            $commentIndex = $commentsStats->search(function ($item, $key) use($month, $year) {
-                return $item->year == $year && $item->month == $month;
-            });
-            // If ID is not false
-            if (is_int($commentIndex)) {
-                $comment = $commentsStats->get($commentIndex);
-                $cmntTotal = $comment->cmnt_total;
-            } else {
-                $cmntTotal = 0;
-            }
+            $raw = $raw . " (" . $year . ", " . $month . ", null, null),";
+        }
+        // Delete last comma in the string
+        $raw = substr($raw, 0, -1);
+        // Set where raw with userID
+        $userSelect = (!is_null($userID) ? ("user_id = " . $userID) : "user_id IS NOT NULL");
+
+        $statistics = DB::select("SELECT * FROM (VALUES $raw) AS period (year, month, artcl_total, cmnt_total)
+                                            LEFT JOIN (SELECT 
+                                                date_part('month', created_at) AS month,
+                                                date_part('year', created_at) AS year,
+                                                COUNT(*) AS artcl_total
+                                                FROM articles
+                                                WHERE $userSelect
+                                                GROUP BY year, month) AS artcl
+                                            USING (month, year)
+                                            LEFT JOIN (SELECT 
+                                                date_part('month', created_at) AS month,
+                                                date_part('year', created_at) AS year,
+                                                COUNT(*) AS cmnt_total
+                                                FROM comments
+                                                WHERE $userSelect
+                                                GROUP BY year, month) AS cmnt
+                                            USING (month, year)
+                                            ORDER BY period.year, period.month ASC
+                                            ");
+        // Change date's presentation
+        $finalStat = collect();
+        foreach ($statistics as $statistic) {
+            $date = Carbon::createFromIsoFormat('!YYYY-M', $statistic->year . '-' . $statistic->month, 'UTC');
             // Save result statistic
-            $statistics->push([
+            $finalStat->push([
                 'date' => $date->isoFormat('MMMM YYYY'),
-                'artcl_total' => $artclTotal,
-                'cmnt_total' => $cmntTotal,
+                'artcl_total' => (int) $statistic->artcl_total,
+                'cmnt_total' => (int) $statistic->cmnt_total,
             ]);
         }
-        return $statistics;
+        return $finalStat;
     }
 
 }
