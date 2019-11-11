@@ -84,6 +84,7 @@ class ArticleController extends Controller
                         ->paginate(5),
             'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
+            'tagsCount' => $this->getTagsChart(),
         ];
         } else {
             $data = [
@@ -94,6 +95,7 @@ class ArticleController extends Controller
                         ->paginate(5),
                 'dates' => $this->getArticleArchive(),
                 'tags' => Tag::get(),
+                'tagsCount' => $this->getTagsChart(),
             ];
         }
         return view('index', $data);
@@ -117,6 +119,7 @@ class ArticleController extends Controller
                         ->paginate(5),
             'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
+            'tagsCount' => $this->getTagsChart(),
         ];
         return view('index', $data);
     }
@@ -158,8 +161,11 @@ class ArticleController extends Controller
             try {
                 $article->save();
             } catch (\Exception $ex) {
+                $data = [
+                    'tags' => Tag::get(),
+                ];
                 $request->session()->flash('error', __('article.save_err') . $ex->getMessage());
-                return view('user.add_article');
+                return view('user.add_article', $data);
             }
             // Add tags
             $tags = $request->tags;
@@ -172,6 +178,7 @@ class ArticleController extends Controller
                 'articles' => Article::latest()->paginate(5),
                 'dates' => $this->getArticleArchive(),
                 'tags' => Tag::get(),
+                'tagsCount' => $this->getTagsChart(),
             ];
             $request->session()->flash('success', __('article.save_ok'));
             return view('index', $data);
@@ -225,6 +232,7 @@ class ArticleController extends Controller
                 'comments' => Comment::where('article_id', $id)
                     ->orderBy('created_at', 'desc')->get(),
                 'tags' => Tag::get(),
+                'tagsCount' => $this->getTagsChart(),
             ];
             // Delete old tags
             $article->tags()->detach();
@@ -296,6 +304,7 @@ class ArticleController extends Controller
             'articles' => $this->searchQueryProcessing((string)$request->input('query')),
             'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
+            'tagsCount' => $this->getTagsChart(),
         ];
         return view('index', $data);
     }
@@ -313,6 +322,7 @@ class ArticleController extends Controller
             'articles' => $this->getRelevantArticles($tag),
             'dates' => $this->getArticleArchive(),
             'tags' => Tag::get(),
+            'tagsCount' => $this->getTagsChart(),
         ];
         return view('index', $data);
     }

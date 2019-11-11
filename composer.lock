@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94d4bf9ac7f4a933030e46a346ee2917",
+    "content-hash": "fa2cea49167a2f93acd2ec8f9ab19614",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -613,6 +613,71 @@
             "time": "2019-07-09T14:00:02+00:00"
         },
         {
+            "name": "laravel/scout",
+            "version": "v7.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/scout.git",
+                "reference": "733f334cc2487c6ac85a557ae5eefd29f6bb1ba3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/733f334cc2487c6ac85a557ae5eefd29f6bb1ba3",
+                "reference": "733f334cc2487c6ac85a557ae5eefd29f6bb1ba3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/bus": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/contracts": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/database": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/pagination": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/queue": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "illuminate/support": "~5.4.0|~5.5.0|~5.6.0|~5.7.0|~5.8.0|^6.0|^7.0",
+                "php": "^7.1.3"
+            },
+            "require-dev": {
+                "algolia/algoliasearch-client-php": "^2.2",
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^6.0|^7.0|^8.0"
+            },
+            "suggest": {
+                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^2.2)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "7.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Scout\\ScoutServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Scout\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Scout provides a driver based solution to searching your Eloquent models.",
+            "keywords": [
+                "algolia",
+                "laravel",
+                "search"
+            ],
+            "time": "2019-09-24T21:06:28+00:00"
+        },
+        {
             "name": "laravel/tinker",
             "version": "v1.0.8",
             "source": {
@@ -758,6 +823,68 @@
                 "storage"
             ],
             "time": "2019-06-18T20:09:29+00:00"
+        },
+        {
+            "name": "mcamara/laravel-localization",
+            "version": "1.4.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mcamara/laravel-localization.git",
+                "reference": "1497c94e92f7b211bd9ea090ab627dac36a75a88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mcamara/laravel-localization/zipball/1497c94e92f7b211bd9ea090ab627dac36a75a88",
+                "reference": "1497c94e92f7b211bd9ea090ab627dac36a75a88",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "~5.2.0||~5.3.0||~5.4.0||~5.5.0||~5.6.0||~5.7.0||~5.8.0||^6.0",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "orchestra/testbench-browser-kit": "~3.4|~3.8|~4.0",
+                "phpunit/phpunit": "6.0.*|8.0.*"
+            },
+            "suggest": {
+                "ext-intl": "*"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Mcamara\\LaravelLocalization\\LaravelLocalizationServiceProvider"
+                    ],
+                    "aliases": {
+                        "LaravelLocalization": "Mcamara\\LaravelLocalization\\Facades\\LaravelLocalization"
+                    }
+                }
+            },
+            "autoload": {
+                "classmap": [],
+                "psr-0": {
+                    "Mcamara\\LaravelLocalization": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Cámara",
+                    "email": "mcamara88@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easy localization for Laravel",
+            "homepage": "https://github.com/mcamara/laravel-localization",
+            "keywords": [
+                "laravel",
+                "localization",
+                "php"
+            ],
+            "time": "2019-11-04T23:33:01+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1103,6 +1230,67 @@
                 "type"
             ],
             "time": "2015-07-25T16:39:46+00:00"
+        },
+        {
+            "name": "pmatseykanets/laravel-scout-postgres",
+            "version": "v6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pmatseykanets/laravel-scout-postgres.git",
+                "reference": "3dadcccd0f998877e88787a63dc54834bbb400f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pmatseykanets/laravel-scout-postgres/zipball/3dadcccd0f998877e88787a63dc54834bbb400f3",
+                "reference": "3dadcccd0f998877e88787a63dc54834bbb400f3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "~5.4|~6.0",
+                "illuminate/database": "~5.4|~6.0",
+                "illuminate/support": "~5.4|~6.0",
+                "laravel/scout": "~7.0",
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2.3",
+                "phpunit/phpunit": "^8.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ScoutEngines\\Postgres\\PostgresEngineServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ScoutEngines\\Postgres\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Matseykanets",
+                    "email": "pmatseykanets@gmail.com",
+                    "homepage": "https://github.com/pmatseykanets"
+                }
+            ],
+            "description": "PostgreSQL Full Text Search Driver for Laravel Scout",
+            "homepage": "https://github.com/pmatseykanets/laravel-scout-postgres",
+            "keywords": [
+                "fts",
+                "full text search",
+                "laravel",
+                "laravel scout",
+                "postgresql",
+                "search"
+            ],
+            "time": "2019-09-19T23:33:33+00:00"
         },
         {
             "name": "psr/container",

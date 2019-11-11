@@ -87,6 +87,19 @@
 
     <script type="text/javascript">
         Highcharts.chart('tagsCloud', {
+            plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function () {
+                                location.href = "{{ url('tag') }}/" +
+                                    this.options.name;
+                            }
+                        }
+                    }
+                }
+            },
             series: [{
                 type: 'wordcloud',
                 data: [
@@ -94,7 +107,7 @@
                         {name: '{{$key}}', weight: {{ $tagCount }} },
                     @endforeach
                 ],
-                name: 'Occurrences'
+                name: 'TagsCloud',
             }],
             title: {
                 text: '{{__('menu.tags')}}'

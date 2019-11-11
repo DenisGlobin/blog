@@ -42,7 +42,7 @@ trait TagsProcessing
     protected function getRelevantArticles(string $tagName)
     {
         $articles = Article::whereHas('tags', function ($query) use ($tagName) {
-            $query->where('name', 'ilike', $tagName);
+            $query->where('name', $tagName);
         })->paginate(5);
         return $articles;
     }

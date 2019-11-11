@@ -166,7 +166,8 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Laravel\Scout\ScoutServiceProvider::class,
+        ScoutEngines\Postgres\PostgresEngineServiceProvider::class,
         /*
          * Application Service Providers...
          */
