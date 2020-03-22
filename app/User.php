@@ -61,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Retrive articles related with the user.
+     * Retrieve articles related with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -71,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Retrive comments related with the user.
+     * Retrieve comments related with the user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

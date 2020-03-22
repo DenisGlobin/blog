@@ -4,7 +4,6 @@ namespace App\Library;
 
 use App\Article;
 use App\Tag;
-use Illuminate\Database\Eloquent\Builder;
 
 trait TagsProcessing
 {

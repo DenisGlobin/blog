@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BanRequest;
 use App\Http\Requests\StatisticRequest;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use App\User;
 use App\Library\TagsProcessing;
 use App\Library\ArticlesAndCommentsStatistic;

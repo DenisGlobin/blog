@@ -15,8 +15,6 @@ class ArticleRequest extends FormRequest
     public function authorize()
     {
         return true;
-//        $article = Article::find($this->route('article.edit'));
-//        return $article && $this->user()->can('update', $article);
     }
 
     /**

@@ -27,7 +27,7 @@ class Comment extends Model
         'created_at', 'updated_at', 'deleted_at',
     ];
     /**
-     * Retrive user related with the comment.
+     * Retrieve user related with the comment.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
@@ -36,7 +36,7 @@ class Comment extends Model
     }
 
     /**
-     * Retrive article related with the comment.
+     * Retrieve article related with the comment.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function article()

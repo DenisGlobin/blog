@@ -3,7 +3,7 @@
 @section('content')
 
     <div class="col-md-8 blog-main">
-        <h3 class="pb-3 mb-4 font-italic border-bottom">{{ $title }}</h3>
+        <h1 class="pb-3 mb-4 font-italic border-bottom">{{ $title }}</h1>
 
             @if (isset(Auth::user()->banned_until))
                 @include('inc.banned')

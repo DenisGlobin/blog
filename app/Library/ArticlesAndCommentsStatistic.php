@@ -5,7 +5,6 @@ namespace App\Library;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 
 trait ArticlesAndCommentsStatistic
 {
@@ -31,7 +30,7 @@ trait ArticlesAndCommentsStatistic
                 $maxDate = $date->max_date;
             }
         }
-        // Иначе показывает на месяц меньше, чем нужно
+
         $maxDate = Carbon::parse($maxDate)->addMonth();
         $monthPeriod = CarbonPeriod::create($minDate, '1 month', $maxDate);
 
@@ -48,7 +47,7 @@ trait ArticlesAndCommentsStatistic
      */
     protected function getArticlesAndCommentStatistic(string $startDate, string $endDate, $userID = null)
     {
-        // Trasform selected dates to Carbon dates
+        // Transform selected dates to Carbon dates
         $dateFrom = Carbon::createFromIsoFormat('!YYYY-MM', $startDate, 'UTC');
         $dateUntil = Carbon::createFromIsoFormat('!YYYY-MM', $endDate, 'UTC');
         $period = CarbonPeriod::create($dateFrom,'1 month', $dateUntil->addMonth());

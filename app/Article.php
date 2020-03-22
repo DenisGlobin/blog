@@ -39,7 +39,7 @@ class Article extends Model
     ];
 
     /**
-     * Retrive user related with the article.
+     * Retrieve user related with the article.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -49,7 +49,7 @@ class Article extends Model
     }
 
     /**
-     * Retrive comments related with the comment.
+     * Retrieve comments related with the article.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -58,6 +58,11 @@ class Article extends Model
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * Retrieve tags related with the article.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
@@ -94,8 +99,6 @@ class Article extends Model
                 'normalization' => 32,
             ],
         ];
-
-
     }
 
     public function toSearchableArray()
@@ -103,8 +106,8 @@ class Article extends Model
         return [
             'title' => $this->title,
             'full_text' => $this->full_text,
-// тут поллучаю запись с таблицы контента в ней получаю все теги привязынне
-//к данной записи собираю их в строку через запятую и формирую поле tags для индекса
+//          Here I get the entry from the article table, in it I get all the tags in relation to this record,
+//          I collect them in a line separated by a comma and form the tags field for the index
             'tags' => $this->tags()
                 ->pluck('name')
                 ->implode(', ')

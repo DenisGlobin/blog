@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Mail\ChangeEmail;
 use App\User;
-use App\Article;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -91,7 +89,7 @@ class UserController extends Controller
     }
 
     /**
-     * Confirming to change user's email adress.
+     * Confirming to change user's email address.
      *
      * @param string $token
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
